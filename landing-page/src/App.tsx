@@ -10,9 +10,9 @@ import About from "./pages/About";
 import Places from "./pages/Places";
 import PlaceCategory from "./pages/PlaceCategory";
 import FAQs from "./pages/FAQs";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
-import AdminDashboard from "./pages/AdminDashboard";
-import UserDashboard from "./pages/UserDashboard";
 
 const queryClient = new QueryClient();
 
@@ -26,11 +26,10 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/about" element={<About />} />
-          <Route path="/places" element={<Places />} />
           <Route path="/places/:category" element={<PlaceCategory />} />
           <Route path="/faqs" element={<FAQs />} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/user/dashboard" element={<UserDashboard />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />

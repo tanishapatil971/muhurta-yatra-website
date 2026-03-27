@@ -81,10 +81,10 @@ export default function Navbar() {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => navigate("/admin/dashboard")}>
+              <DropdownMenuItem onClick={() => navigate("/login?role=admin")}>
                 Login as Admin
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate("/user/dashboard")}>
+              <DropdownMenuItem onClick={() => navigate("/login?role=traveller")}>
                 Login as Traveller
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -125,10 +125,10 @@ export default function Navbar() {
                 </Link>
               ))}
               <div className="flex flex-col gap-2 mt-4">
-                <Button variant="heroOutline" onClick={() => { navigate("/admin/dashboard"); setMobileOpen(false); }}>
+                <Button variant="heroOutline" onClick={() => { navigate("/login?role=admin"); setMobileOpen(false); }}>
                   Login as Admin
                 </Button>
-                <Button variant="hero" onClick={() => { navigate("/user/dashboard"); setMobileOpen(false); }}>
+                <Button variant="hero" onClick={() => { navigate("/login?role=traveller"); setMobileOpen(false); }}>
                   Login as Traveller
                 </Button>
               </div>
