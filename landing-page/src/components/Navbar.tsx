@@ -1,8 +1,14 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import logo from "@/assets/logo.png";
 
 const navLinks = [
@@ -16,6 +22,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -67,11 +74,21 @@ export default function Navbar() {
               {link.label}
             </Link>
           ))}
-          <Button variant="hero" size="lg" className="ml-4" asChild>
-            <a href="tel:+919876543210" aria-label="Call to book">
-              <Phone className="h-4 w-4 mr-1" /> Book Now
-            </a>
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="hero" size="lg" className="ml-4">
+                Login
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => navigate("/admin/dashboard")}>
+                Login as Admin
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/user/dashboard")}>
+                Login as Traveller
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {/* Mobile toggle */}
@@ -107,11 +124,14 @@ export default function Navbar() {
                   {link.label}
                 </Link>
               ))}
-              <Button variant="hero" size="lg" className="mt-2" asChild>
-                <a href="tel:+919876543210">
-                  <Phone className="h-4 w-4 mr-1" /> Book Now
-                </a>
-              </Button>
+              <div className="flex flex-col gap-2 mt-4">
+                <Button variant="heroOutline" onClick={() => { navigate("/admin/dashboard"); setMobileOpen(false); }}>
+                  Login as Admin
+                </Button>
+                <Button variant="hero" onClick={() => { navigate("/user/dashboard"); setMobileOpen(false); }}>
+                  Login as Traveller
+                </Button>
+              </div>
             </div>
           </motion.div>
         )}
