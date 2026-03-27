@@ -1,9 +1,15 @@
 {
   "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "esModuleInterop": true,
     "allowJs": true,
     "noImplicitAny": false,
     "noUnusedLocals": false,
     "noUnusedParameters": false,
+    "types": ["node", "vite/client"],
+    "baseUrl": ".",
     "paths": {
       "@/*": [
         "./src/*"
