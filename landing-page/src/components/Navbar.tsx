@@ -39,7 +39,7 @@ export default function Navbar() {
         <Link to="/" className="flex items-center gap-2 group" aria-label="Muhurta Yatra Home">
           <img src={logo} alt="Muhurta Yatra Logo" className="h-10 w-10 md:h-12 md:w-12" loading="lazy" />
           <div className="flex flex-col">
-            <span className={`font-heading text-lg md:text-xl font-bold leading-tight transition-colors ${scrolled ? "text-foreground" : "text-primary-foreground"}`}>
+            <span className={`font-heading text-2xl md:text-3xl font-bold leading-tight transition-colors ${scrolled ? "text-foreground" : "text-primary-foreground"}`}>
               Muhurta Yatra
             </span>
             <span className={`text-[10px] tracking-widest uppercase transition-colors ${scrolled ? "text-muted-foreground" : "text-primary-foreground/70"}`}>

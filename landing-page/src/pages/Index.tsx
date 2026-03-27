@@ -75,10 +75,10 @@ export default function Index() {
         ))}
         <div className="hero-overlay absolute inset-0" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <h1 className="font-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-primary-foreground mb-4 animate-fade-up max-w-4xl text-balance">
+          <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-4 animate-fade-up max-w-4xl text-balance">
             {heroSlides[currentSlide].title}
           </h1>
-          <p className="text-primary-foreground/80 text-lg md:text-xl max-w-2xl mb-8 animate-fade-up" style={{ animationDelay: "200ms" }}>
+          <p className="text-primary-foreground/80 text-base md:text-lg max-w-2xl mb-8 animate-fade-up" style={{ animationDelay: "200ms" }}>
             {heroSlides[currentSlide].sub}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-up" style={{ animationDelay: "400ms" }}>
