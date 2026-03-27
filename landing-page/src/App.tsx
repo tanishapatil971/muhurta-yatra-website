@@ -11,6 +11,8 @@ import Places from "./pages/Places";
 import PlaceCategory from "./pages/PlaceCategory";
 import FAQs from "./pages/FAQs";
 import NotFound from "./pages/NotFound";
+import AdminDashboard from "./pages/AdminDashboard";
+import UserDashboard from "./pages/UserDashboard";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +29,8 @@ const App = () => (
           <Route path="/places" element={<Places />} />
           <Route path="/places/:category" element={<PlaceCategory />} />
           <Route path="/faqs" element={<FAQs />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/user/dashboard" element={<UserDashboard />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Footer />
