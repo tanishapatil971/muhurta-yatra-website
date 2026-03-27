@@ -16,14 +16,14 @@ export default function Login() {
     if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
       // Local testing: automatically redirect to your Live Server
       if (role === "admin") {
-        window.location.href = "http://127.0.0.1:5500/admin-page/index.html";
+        window.location.href = "http://127.0.0.1:5500/admin-page/author.html";
       } else {
         window.location.href = "http://127.0.0.1:5500/user-page/index.html";
       }
     } else {
       // Production (GitHub Pages): Use relative path to jump folders
       if (role === "admin") {
-        window.location.href = "../admin-page/index.html";
+        window.location.href = "../admin-page/author.html";
       } else {
         window.location.href = "../user-page/index.html";
       }
