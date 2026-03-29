@@ -15,7 +15,7 @@ import FAQs from "./pages/FAQs";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
-import AdminLayout from "./admin/AdminLayout";
+import AdminLayout from "../../admin-page/AdminLayout";
 
 // USER PAGES
 import Dashboard from "./user/Dashboard";
