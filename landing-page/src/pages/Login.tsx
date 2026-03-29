@@ -19,7 +19,7 @@ export default function Login() {
 
     // ✅ React routing (correct way)
     if (role === "admin") {
-      navigate("/dashboard"); // later you can create admin dashboard
+      navigate("/admin");
     } else {
       navigate("/dashboard");
     }
