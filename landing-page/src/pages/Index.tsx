@@ -83,6 +83,9 @@ export default function Index() {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-up" style={{ animationDelay: "400ms" }}>
             <Button variant="hero" size="lg" asChild>
+              <Link to="/plan">Start Planning</Link>
+            </Button>
+            <Button variant="hero" size="lg" asChild>
               <Link to="/places">Explore Destinations</Link>
             </Button>
             <Button variant="heroOutline" size="lg" asChild>
