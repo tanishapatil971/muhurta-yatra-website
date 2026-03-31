@@ -2,9 +2,11 @@ import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Facebook, Instagram, Twitter, Youtube, ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logo from "@/assets/logo.png";
+import { CONTACT } from "@/config/contact";
 
 export default function Footer() {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  const contactHref = `tel:+91${CONTACT.phone.replace(/\s+/g, "")}`;
 
   return (
     <footer className="bg-foreground text-background" role="contentinfo">
@@ -20,7 +22,7 @@ export default function Footer() {
             </p>
           </div>
           <Button variant="heroOutline" size="lg" asChild>
-            <a href="tel:+919876543210">
+            <a href={contactHref}>
               <Phone className="h-4 w-4 mr-1" /> Call Us Now
             </a>
           </Button>
@@ -95,7 +97,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-2 text-background/70">
                 <Phone className="h-4 w-4 shrink-0 text-primary" />
-                <a href="tel:+919876543210" className="hover:text-primary transition-colors">+91 98765 43210</a>
+                <a href={contactHref} className="hover:text-primary transition-colors">{CONTACT.phone}</a>
               </li>
               <li className="flex items-center gap-2 text-background/70">
                 <Mail className="h-4 w-4 shrink-0 text-primary" />

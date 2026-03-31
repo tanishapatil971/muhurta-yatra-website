@@ -3,6 +3,7 @@ import { ChevronDown, Compass, Heart, Mountain, Shield } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import ScrollReveal from "@/components/ScrollReveal";
+import { CONTACT } from "@/config/contact";
 import heroSinhagad from "@/assets/hero-sinhagad.jpg";
 import heroPawna from "@/assets/hero-pawna.jpg";
 import heroRaigad from "@/assets/hero-raigad.jpg";
@@ -41,6 +42,8 @@ export default function Index() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [testimonialIdx, setTestimonialIdx] = useState(0);
   const [message, setMessage] = useState("");
+  const contactHref = `tel:+91${CONTACT.phone.replace(/\s+/g, "")}`;
+  const whatsappHref = `https://wa.me/91${CONTACT.phone.replace(/\s+/g, "")}?text=${encodeURIComponent(CONTACT.whatsappMessage)}`;
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((p) => (p + 1) % heroSlides.length);
@@ -89,11 +92,11 @@ export default function Index() {
               <Link to="/places">Explore Destinations</Link>
             </Button>
             <Button variant="heroOutline" size="lg" asChild>
-              <a href="tel:+919876543210">Book Your Yatra</a>
+              <a href={contactHref}>Book Your Yatra</a>
             </Button>
             <Button variant="hero" size="lg" className="bg-[hsl(142,70%,40%)] hover:bg-[hsl(142,70%,35%)]" asChild>
-              <a href="https://wa.me/919876543210?text=Hi%20Muhurta%20Yatra!%20I%27d%20like%20to%20know%20more%20about%20your%20tours." target="_blank" rel="noopener noreferrer">
-                💬 Chat on WhatsApp
+              <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
+                Chat on WhatsApp
               </a>
             </Button>
           </div>

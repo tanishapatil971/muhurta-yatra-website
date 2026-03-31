@@ -2,15 +2,16 @@ import { useState } from "react";
 import { Search, ChevronDown } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 import heroSinhagad from "@/assets/hero-sinhagad.jpg";
+import { CONTACT } from "@/config/contact";
 
 const faqs = [
   {
     q: "What are the best forts near Pimpri-Chinchwad?",
-    a: "Some of the best forts near Pimpri include Sinhagad Fort (50 km), Lohagad Fort (65 km), Torna Fort (60 km), Rajmachi Fort (80 km), and Shaniwar Wada (20 km). We organize guided treks to all of these with transport, meals, and expert guides."
+    a: "Some of the best forts near Pimpri include Sinhagad Fort (50 km), Lohagad Fort (65 km), Torna Fort (60 km), and Rajmachi Fort (80 km). We organize guided treks to all of these with transport, meals, and expert guides."
   },
   {
     q: "How do I book a custom yatra?",
-    a: "Simply call us at +91 98765 43210 or fill out the contact form on our homepage. Share your preferred destinations, dates, group size, and budget — our team will craft a personalized itinerary within 24 hours."
+    a: `Simply call us at ${CONTACT.phone} or fill out the contact form on our homepage. Share your preferred destinations, dates, group size, and budget — our team will craft a personalized itinerary within 24 hours.`
   },
   {
     q: "Is it safe to trek during monsoons?",
@@ -34,7 +35,7 @@ const faqs = [
   },
   {
     q: "Do you arrange spiritual/religious tours?",
-    a: "Yes, spiritual tours are our specialty! We organize Ashtavinayak Darshan, Jyotirlinga Yatra, Vaishno Devi, Char Dham, and various local temple circuits. All arrangements include comfortable transport, accommodation, and guided darshan."
+    a: "Yes, spiritual tours are our specialty! We organize Ashtavinayak Darshan, Jyotirlinga Yatra, Char Dham, and various local temple circuits. All arrangements include comfortable transport, accommodation, and guided darshan."
   },
   {
     q: "What is the cancellation policy?",

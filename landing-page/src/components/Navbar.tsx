@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Menu, X, Phone } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -23,6 +23,8 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const isHeroRoute = ["/", "/about", "/places", "/faqs"].includes(location.pathname);
+  const transparentAtTop = isHeroRoute && !scrolled && !mobileOpen;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -35,9 +37,9 @@ export default function Navbar() {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled
-          ? "bg-background/95 backdrop-blur-md shadow-lg border-b border-border"
-          : "bg-transparent"
+        transparentAtTop
+          ? "bg-transparent border-transparent shadow-none"
+          : "bg-white/90 backdrop-blur-md shadow-md border-b border-gray-200"
       }`}
       role="navigation"
       aria-label="Main navigation"
@@ -46,10 +48,10 @@ export default function Navbar() {
         <Link to="/" className="flex items-center gap-2 group" aria-label="Muhurta Yatra Home">
           <img src={logo} alt="Muhurta Yatra Logo" className="h-10 w-10 md:h-12 md:w-12" loading="lazy" />
           <div className="flex flex-col">
-            <span className={`font-heading text-2xl md:text-3xl font-bold leading-tight transition-colors ${scrolled ? "text-foreground" : "text-primary-foreground"}`}>
+            <span className={`font-heading text-2xl md:text-3xl font-bold leading-tight transition-colors duration-500 ${transparentAtTop ? "text-white" : "text-gray-900"}`}>
               Muhurta Yatra
             </span>
-            <span className={`text-[10px] tracking-widest uppercase transition-colors ${scrolled ? "text-muted-foreground" : "text-primary-foreground/70"}`}>
+            <span className={`text-[10px] tracking-widest uppercase transition-colors duration-500 ${transparentAtTop ? "text-white/80" : "text-gray-600"}`}>
               Handcrafted Journeys
             </span>
           </div>
@@ -63,12 +65,12 @@ export default function Navbar() {
               to={link.to}
               className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                 location.pathname === link.to
-                  ? scrolled
-                    ? "bg-primary/10 text-primary"
-                    : "bg-primary-foreground/20 text-primary-foreground"
-                  : scrolled
-                  ? "text-foreground hover:bg-muted"
-                  : "text-primary-foreground/80 hover:text-primary-foreground hover:bg-primary-foreground/10"
+                  ? transparentAtTop
+                    ? "bg-white/20 text-white"
+                    : "bg-primary/10 text-primary"
+                  : transparentAtTop
+                    ? "text-white hover:bg-white/15"
+                    : "text-gray-800 hover:text-gray-900 hover:bg-gray-100"
               }`}
             >
               {link.label}
@@ -93,7 +95,9 @@ export default function Navbar() {
 
         {/* Mobile toggle */}
         <button
-          className={`md:hidden p-2 rounded-lg transition-colors ${scrolled ? "text-foreground" : "text-primary-foreground"}`}
+          className={`md:hidden p-2 rounded-lg transition-colors duration-300 ${
+            transparentAtTop ? "text-white hover:bg-white/15" : "text-gray-800 hover:text-gray-900 hover:bg-gray-100"
+          }`}
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
         >
@@ -108,7 +112,7 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-background/98 backdrop-blur-lg border-b border-border overflow-hidden"
+            className="md:hidden bg-white/95 backdrop-blur-lg border-b border-gray-200 overflow-hidden"
           >
             <div className="px-4 py-4 flex flex-col gap-1">
               {navLinks.map((link) => (
@@ -118,7 +122,7 @@ export default function Navbar() {
                   className={`px-4 py-3 rounded-lg text-base font-medium transition-colors ${
                     location.pathname === link.to
                       ? "bg-primary/10 text-primary"
-                      : "text-foreground hover:bg-muted"
+                      : "text-gray-800 hover:bg-gray-100"
                   }`}
                 >
                   {link.label}
