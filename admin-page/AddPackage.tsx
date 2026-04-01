@@ -16,8 +16,8 @@ export default function AddPackage() {
           <h3 className="flex items-center gap-2 pb-2 mb-6 text-lg font-serif font-bold border-b-2 border-[#EDE6D6]">
             <span>📍</span> Basic Information
           </h3>
-          <div className="grid gap-6 sm:grid-cols-2">
-            <div className="sm:col-span-2 space-y-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="col-span-1 md:col-span-2 space-y-2 mb-2">
               <label className="text-xs font-bold tracking-wider text-[#3D3630] uppercase">
                 Destination
               </label>

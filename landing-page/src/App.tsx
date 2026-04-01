@@ -17,7 +17,7 @@ import FAQs from "./pages/FAQs";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
-import AdminLayout from "../../admin-page/AdminLayout";
+import AdminPage from "../../admin-page/AdminPage";
 
 // USER PAGES
 import Dashboard from "./user/Dashboard";
@@ -59,7 +59,7 @@ function AppContent() {
         <Route path="/personalized" element={<Personalized />} />
 
         {/* ADMIN MODULE */}
-        <Route path="/admin" element={<AdminLayout />} />
+        <Route path="/admin" element={<AdminPage />} />
 
         <Route path="*" element={<NotFound />} />
       </Routes>

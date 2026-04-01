@@ -1,104 +1,55 @@
-import { Home, Plus, Package, MessageSquare } from "lucide-react";
+import { Package, Plus, MessageSquare } from "lucide-react";
 
 interface AdminSidebarProps {
-  activeTab: 'dashboard' | 'add-package' | 'manage-packages' | 'enquiries';
-  setActiveTab: (tab: 'dashboard' | 'add-package' | 'manage-packages' | 'enquiries') => void;
-  isSidebarOpen: boolean;
-  setIsSidebarOpen: (open: boolean) => void;
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
 }
 
-export default function AdminSidebar({
-  activeTab,
-  setActiveTab,
-  isSidebarOpen,
-  setIsSidebarOpen,
-}: AdminSidebarProps) {
+export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarProps) {
+  const menuItems = [
+    { id: "manage-packages", label: "Manage Packages", icon: Package },
+    { id: "add-package", label: "Add Package", icon: Plus },
+    { id: "enquiries", label: "Enquiries", icon: MessageSquare },
+  ];
+
   return (
-    <>
-      <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-[#1A1714] text-white transform transition-transform duration-300 ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } md:translate-x-0 md:relative md:flex flex-col`}
-      >
-        <div className="flex items-center gap-3 p-6 border-b border-white/10">
-          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#C75B2A] text-xl">
-            ✈️
+    <div className="flex flex-col h-full bg-white border-r border-gray-200 shadow-sm">
+      <div className="p-6 border-b border-gray-100 mb-4 text-center">
+        <h1 className="text-xl font-bold tracking-tight text-gray-900">Admin Dashboard</h1>
+      </div>
+      
+      <nav className="flex-1 px-4 space-y-2">
+        {menuItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = activeTab === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => setActiveTab(item.id)}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all ${
+                isActive 
+                  ? "bg-primary text-white shadow-md shadow-primary/20 translate-x-1" 
+                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+              }`}
+            >
+              <Icon className={`w-5 h-5 ${isActive ? "text-white" : "text-gray-400"}`} />
+              {item.label}
+            </button>
+          );
+        })}
+      </nav>
+      
+      <div className="p-4 border-t border-gray-50">
+        <div className="bg-gray-50 rounded-xl p-4 flex items-center gap-3">
+          <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center text-primary font-bold">
+            A
           </div>
-          <div className="font-serif text-lg font-bold leading-tight">
-            Travel
-            <br />
-            <span className="block text-[10px] uppercase tracking-widest text-white/50 font-sans mt-0.5">
-              Admin Portal
-            </span>
+          <div className="text-left overflow-hidden">
+            <p className="text-xs font-bold text-gray-900 truncate">Administrator</p>
+            <p className="text-[10px] text-gray-500 truncate">admin@yatra.com</p>
           </div>
         </div>
-
-        <nav className="flex-1 p-4 space-y-1">
-          <div className="px-3 py-3 text-xs font-semibold tracking-widest uppercase text-[#8A7E74]">
-            Main Menu
-          </div>
-          <button
-            onClick={() => {
-              setActiveTab("dashboard");
-              setIsSidebarOpen(false);
-            }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors ${
-              activeTab === "dashboard"
-                ? "bg-[#C75B2A] text-white font-medium"
-                : "text-white/60 hover:bg-white/10 hover:text-white"
-            }`}
-          >
-            <Home className="w-5 h-5" /> Dashboard
-          </button>
-          <button
-            onClick={() => {
-              setActiveTab("add-package");
-              setIsSidebarOpen(false);
-            }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors ${
-              activeTab === "add-package"
-                ? "bg-[#C75B2A] text-white font-medium"
-                : "text-white/60 hover:bg-white/10 hover:text-white"
-            }`}
-          >
-            <Plus className="w-5 h-5" /> Add Package
-          </button>
-          <button
-            onClick={() => {
-              setActiveTab("manage-packages");
-              setIsSidebarOpen(false);
-            }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors ${
-              activeTab === "manage-packages"
-                ? "bg-[#C75B2A] text-white font-medium"
-                : "text-white/60 hover:bg-white/10 hover:text-white"
-            }`}
-          >
-            <Package className="w-5 h-5" /> Manage Packages
-          </button>
-          <button
-            onClick={() => {
-              setActiveTab("enquiries");
-              setIsSidebarOpen(false);
-            }}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors ${
-              activeTab === "enquiries"
-                ? "bg-[#C75B2A] text-white font-medium"
-                : "text-white/60 hover:bg-white/10 hover:text-white"
-            }`}
-          >
-            <MessageSquare className="w-5 h-5" /> Enquiries
-          </button>
-        </nav>
-      </aside>
-
-      {/* Mobile Overlay */}
-      {isSidebarOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/40 md:hidden"
-          onClick={() => setIsSidebarOpen(false)}
-        />
-      )}
-    </>
+      </div>
+    </div>
   );
 }

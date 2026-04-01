@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Enquiry = require('../models/Enquiry');
+const { authMiddleware, adminMiddleware } = require('../middleware/authMiddleware');
 
 // POST /api/enquiries - save new enquiry
 router.post('/', async (req, res) => {
@@ -14,7 +15,7 @@ router.post('/', async (req, res) => {
 });
 
 // GET /api/enquiries - return all enquiries sorted by newest first
-router.get('/', async (req, res) => {
+router.get('/', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const enquiries = await Enquiry.find().sort({ createdAt: -1 });
     res.status(200).json(enquiries);
@@ -24,7 +25,7 @@ router.get('/', async (req, res) => {
 });
 
 // PATCH /api/enquiries/:id - update enquiry status
-router.patch('/:id', async (req, res) => {
+router.patch('/:id', authMiddleware, adminMiddleware, async (req, res) => {
   try {
     const { status } = req.body;
     if (!status) {

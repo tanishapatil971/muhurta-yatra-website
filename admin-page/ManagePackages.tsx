@@ -3,7 +3,7 @@ import { Search, Plus } from "lucide-react";
 export default function ManagePackages({
   setActiveTab,
 }: {
-  setActiveTab: (tab: 'dashboard' | 'add-package' | 'manage-packages') => void;
+  setActiveTab: (tab: 'dashboard' | 'add-package' | 'manage-packages' | 'enquiries') => void;
 }) {
   // Dummy packages
   const packages = [

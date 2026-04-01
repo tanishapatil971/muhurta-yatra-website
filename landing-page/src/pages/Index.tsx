@@ -74,6 +74,7 @@ export default function Index() {
     }
     setIsSubmitting(true);
     try {
+      console.log("API URL:", import.meta.env.VITE_API_URL);
       const response = await fetch(API_ENDPOINTS.enquiries, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
