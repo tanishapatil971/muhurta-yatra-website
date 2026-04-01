@@ -4,12 +4,14 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import ScrollReveal from "@/components/ScrollReveal";
 import { CONTACT } from "@/config/contact";
+import { API_ENDPOINTS } from "@/config/api";
 import heroSinhagad from "@/assets/hero-sinhagad.jpg";
 import heroPawna from "@/assets/hero-pawna.jpg";
 import heroRaigad from "@/assets/hero-raigad.jpg";
 import beachImg from "@/assets/beach-harihareshwar.jpg";
 import fortImg from "@/assets/fort-lohagad.jpg";
 import pilgrimImg from "@/assets/pilgrim-temple.jpg";
+import { useToast } from "@/hooks/use-toast";
 
 const heroSlides = [
   { img: heroSinhagad, title: "Handcrafted Journeys Across India", sub: "Discover Spiritual, Adventure & Cultural Escapes from Pimpri" },
@@ -41,7 +43,12 @@ const destinations = [
 export default function Index() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [testimonialIdx, setTestimonialIdx] = useState(0);
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
   const contactHref = `tel:+91${CONTACT.phone.replace(/\s+/g, "")}`;
   const whatsappHref = `https://wa.me/91${CONTACT.phone.replace(/\s+/g, "")}?text=${encodeURIComponent(CONTACT.whatsappMessage)}`;
 
@@ -58,6 +65,35 @@ export default function Index() {
     const t = setInterval(() => setTestimonialIdx((p) => (p + 1) % testimonials.length), 4000);
     return () => clearInterval(t);
   }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !phone) {
+      toast({ title: "Validation Error", description: "Name and Phone are required.", variant: "destructive" });
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      const response = await fetch(API_ENDPOINTS.enquiries, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, phone, email, message }),
+      });
+      if (response.ok) {
+        toast({ title: "Success", description: "Your inquiry has been sent! We will contact you soon." });
+        setName("");
+        setPhone("");
+        setEmail("");
+        setMessage("");
+      } else {
+        toast({ title: "Error", description: "Failed to send inquiry. Please try again later.", variant: "destructive" });
+      }
+    } catch (error) {
+      toast({ title: "Error", description: "Something went wrong. Please check your connection.", variant: "destructive" });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <main>
@@ -85,9 +121,6 @@ export default function Index() {
             {heroSlides[currentSlide].sub}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-up" style={{ animationDelay: "400ms" }}>
-            <Button variant="hero" size="lg" asChild>
-              <Link to="/plan">Start Planning</Link>
-            </Button>
             <Button variant="hero" size="lg" asChild>
               <Link to="/places">Explore Destinations</Link>
             </Button>
@@ -240,12 +273,12 @@ export default function Index() {
             </div>
           </ScrollReveal>
           <ScrollReveal delay={200}>
-            <form className="glass-card p-8 space-y-4" onSubmit={(e) => e.preventDefault()}>
+            <form className="glass-card p-8 space-y-4" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <input type="text" placeholder="Your Name" className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" aria-label="Your name" />
-                <input type="tel" placeholder="Phone Number" className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" aria-label="Phone number" />
+                <input value={name} onChange={(e) => setName(e.target.value)} type="text" placeholder="Your Name" className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" aria-label="Your name" required />
+                <input value={phone} onChange={(e) => setPhone(e.target.value)} type="tel" placeholder="Phone Number" className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" aria-label="Phone number" required />
               </div>
-              <input type="email" placeholder="Email Address" className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" aria-label="Email" />
+              <input value={email} onChange={(e) => setEmail(e.target.value)} type="email" placeholder="Email Address (Optional)" className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" aria-label="Email" />
               <select className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-primary outline-none transition" aria-label="Tour type">
                 <option>Select Tour Type</option>
                 <option>Spiritual Tour</option>
@@ -259,8 +292,8 @@ export default function Index() {
                 <textarea placeholder="Tell us about your dream trip..." rows={4} maxLength={2000} value={message} onChange={(e) => setMessage(e.target.value)} className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-primary outline-none transition resize-none" aria-label="Message" />
                 <span className="absolute bottom-2 right-3 text-xs text-muted-foreground">{message.length}/2000</span>
               </div>
-              <Button variant="hero" size="lg" className="w-full">
-                Send Inquiry
+              <Button type="submit" variant="hero" size="lg" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? "Sending..." : "Send Inquiry"}
               </Button>
             </form>
           </ScrollReveal>

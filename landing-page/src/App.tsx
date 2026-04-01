@@ -6,9 +6,11 @@ import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import ChatWidget from "@/components/ChatWidget";
 
 import Index from "./pages/Index";
 import About from "./pages/About";
+import Plan from "./pages/Plan";
 import Places from "./pages/Places";
 import PlaceCategory from "./pages/PlaceCategory";
 import FAQs from "./pages/FAQs";
@@ -43,6 +45,7 @@ function AppContent() {
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/about" element={<About />} />
+        <Route path="/plan" element={<Plan />} />
         <Route path="/places" element={<Places />} />
         <Route path="/places/:category" element={<PlaceCategory />} />
         <Route path="/faqs" element={<FAQs />} />
@@ -62,6 +65,7 @@ function AppContent() {
       </Routes>
 
       {!hideLayout && <Footer />}
+      <ChatWidget />
     </>
   );
 }

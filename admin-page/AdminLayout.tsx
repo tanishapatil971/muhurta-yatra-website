@@ -3,9 +3,10 @@ import AdminSidebar from "./AdminSidebar";
 import Overview from "./Overview";
 import AddPackage from "./AddPackage";
 import ManagePackages from "./ManagePackages";
+import EnquiriesPage from "./EnquiriesPage";
 
 export default function AdminLayout() {
-  const [activeTab, setActiveTab] = useState<'dashboard' | 'add-package' | 'manage-packages'>('dashboard');
+  const [activeTab, setActiveTab] = useState<'dashboard' | 'add-package' | 'manage-packages' | 'enquiries'>('dashboard');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
@@ -33,6 +34,7 @@ export default function AdminLayout() {
               {activeTab === "dashboard" && "Overview"}
               {activeTab === "add-package" && "Add Package"}
               {activeTab === "manage-packages" && "Manage Packages"}
+              {activeTab === "enquiries" && "Enquiries"}
             </h1>
           </div>
           <div className="flex items-center gap-4">
@@ -52,6 +54,7 @@ export default function AdminLayout() {
           {activeTab === "manage-packages" && (
             <ManagePackages setActiveTab={setActiveTab} />
           )}
+          {activeTab === "enquiries" && <EnquiriesPage />}
         </div>
       </main>
     </div>

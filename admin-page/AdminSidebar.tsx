@@ -1,8 +1,8 @@
-import { Home, Plus, Package } from "lucide-react";
+import { Home, Plus, Package, MessageSquare } from "lucide-react";
 
 interface AdminSidebarProps {
-  activeTab: 'dashboard' | 'add-package' | 'manage-packages';
-  setActiveTab: (tab: 'dashboard' | 'add-package' | 'manage-packages') => void;
+  activeTab: 'dashboard' | 'add-package' | 'manage-packages' | 'enquiries';
+  setActiveTab: (tab: 'dashboard' | 'add-package' | 'manage-packages' | 'enquiries') => void;
   isSidebarOpen: boolean;
   setIsSidebarOpen: (open: boolean) => void;
 }
@@ -75,6 +75,19 @@ export default function AdminSidebar({
             }`}
           >
             <Package className="w-5 h-5" /> Manage Packages
+          </button>
+          <button
+            onClick={() => {
+              setActiveTab("enquiries");
+              setIsSidebarOpen(false);
+            }}
+            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm transition-colors ${
+              activeTab === "enquiries"
+                ? "bg-[#C75B2A] text-white font-medium"
+                : "text-white/60 hover:bg-white/10 hover:text-white"
+            }`}
+          >
+            <MessageSquare className="w-5 h-5" /> Enquiries
           </button>
         </nav>
       </aside>
