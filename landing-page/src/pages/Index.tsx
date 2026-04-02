@@ -1,5 +1,13 @@
 import { useState, useEffect, useCallback } from "react";
-import { ChevronDown, Compass, Heart, Mountain, Shield } from "lucide-react";
+import { ChevronDown, Compass, Heart, Mountain, Shield, Clock, Info, CheckCircle2 } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import ScrollReveal from "@/components/ScrollReveal";
@@ -12,6 +20,20 @@ import beachImg from "@/assets/beach-harihareshwar.jpg";
 import fortImg from "@/assets/fort-lohagad.jpg";
 import pilgrimImg from "@/assets/pilgrim-temple.jpg";
 import { useToast } from "@/hooks/use-toast";
+
+interface TravelPackage {
+  _id: string;
+  destination: string;
+  price: number;
+  maxPeople: number;
+  transport?: string;
+  status?: string;
+  emoji?: string;
+  image?: string;
+  duration?: string;
+  description?: string;
+  itinerary?: string[];
+}
 
 const heroSlides = [
   { img: heroSinhagad, title: "Handcrafted Journeys Across India", sub: "Discover Spiritual, Adventure & Cultural Escapes from Pimpri" },
@@ -33,12 +55,7 @@ const testimonials = [
   { name: "Amit Joshi", text: "Best travel agency in PCMC. They planned our Konkan beach trip perfectly. Highly recommend!", location: "Nigdi" },
 ];
 
-const destinations = [
-  { img: heroSinhagad, title: "Forts", desc: "Maratha heritage trails", to: "/places/forts" },
-  { img: fortImg, title: "Hill Stations", desc: "Cool Sahyadri retreats", to: "/places/hills" },
-  { img: beachImg, title: "Beaches", desc: "Konkan coastal escapes", to: "/places/beaches" },
-  { img: pilgrimImg, title: "Pilgrim Sites", desc: "Sacred spiritual journeys", to: "/places/pilgrim" },
-];
+// Removed static destinations in favor of dynamic backend packages
 
 export default function Index() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -48,6 +65,8 @@ export default function Index() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [packages, setPackages] = useState<TravelPackage[]>([]);
+  const [loadingPackages, setLoadingPackages] = useState(true);
   const { toast } = useToast();
   const contactHref = `tel:+91${CONTACT.phone.replace(/\s+/g, "")}`;
   const whatsappHref = `https://wa.me/91${CONTACT.phone.replace(/\s+/g, "")}?text=${encodeURIComponent(CONTACT.whatsappMessage)}`;
@@ -60,6 +79,23 @@ export default function Index() {
     const t = setInterval(nextSlide, 5000);
     return () => clearInterval(t);
   }, [nextSlide]);
+
+  useEffect(() => {
+    const fetchPackages = async () => {
+      try {
+        const res = await fetch(API_ENDPOINTS.packages);
+        if (res.ok) {
+          const data = await res.json();
+          setPackages(data.slice(0, 6)); // Limit to latest 6
+        }
+      } catch (err) {
+        console.error("Error fetching packages:", err);
+      } finally {
+        setLoadingPackages(false);
+      }
+    };
+    fetchPackages();
+  }, []);
 
   useEffect(() => {
     const t = setInterval(() => setTestimonialIdx((p) => (p + 1) % testimonials.length), 4000);
@@ -183,33 +219,199 @@ export default function Index() {
         </div>
       </section>
 
-      {/* FEATURED DESTINATIONS */}
+      {/* LATEST TRAVEL PACKAGES (Replaces Featured Destinations) */}
       <section className="section-padding bg-muted/50">
         <div className="container-wide">
           <ScrollReveal>
             <div className="text-center mb-12">
-              <span className="text-primary font-semibold text-sm tracking-widest uppercase">Top Picks</span>
-              <h2 className="font-heading text-3xl md:text-4xl font-bold mt-2 text-foreground">Featured Destinations</h2>
+              <span className="text-primary font-semibold text-sm tracking-widest uppercase">Our Packages</span>
+              <h2 className="font-heading text-3xl md:text-4xl font-bold mt-2 text-foreground">Featured Travel Packages</h2>
+              <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">
+                Explore our current offerings, handcrafted for your next unforgettable yatra.
+              </p>
             </div>
           </ScrollReveal>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {destinations.map((d, i) => (
-              <ScrollReveal key={i} delay={i * 100}>
-                <Link to={d.to} className="group block rounded-2xl overflow-hidden hover-lift relative aspect-[3/4]">
-                  <img src={d.img} alt={d.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" loading="lazy" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/20 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-6">
-                    <h3 className="font-heading text-2xl font-bold text-primary-foreground">{d.title}</h3>
-                    <p className="text-primary-foreground/70 text-sm mt-1">{d.desc}</p>
+
+          {loadingPackages ? (
+            <div className="flex justify-center py-20">
+              <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+            </div>
+          ) : packages.length === 0 ? (
+            <div className="text-center py-20 glass-card bg-background/50 border-dashed border-2 border-border">
+              <p className="text-muted-foreground italic">No active packages found. Use the Admin Dashboard to add new trips!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {packages.map((pkg, i) => (
+                <ScrollReveal key={pkg._id} delay={i * 100}>
+                  <div className="glass-card overflow-hidden group hover-lift flex flex-col h-full bg-white border border-border/50 shadow-sm">
+                    <div className="relative h-56 overflow-hidden bg-muted">
+                      {pkg.image ? (
+                        <img 
+                          src={pkg.image} 
+                          alt={pkg.destination} 
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        />
+                      ) : (
+                        <div className="absolute inset-0 flex items-center justify-center text-6xl opacity-20 grayscale group-hover:grayscale-0 transition-all duration-500">
+                          {pkg.emoji || "✈️"}
+                        </div>
+                      )}
+                      <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-lg text-[10px] font-bold tracking-widest uppercase shadow-md">
+                        {pkg.duration || pkg.status || "Special Offer"}
+                      </div>
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                    </div>
+                    <div className="p-7 flex-1 flex flex-col">
+                      <div className="mb-5">
+                        <h3 className="font-heading text-2xl font-bold text-foreground mb-1">{pkg.destination}</h3>
+                        <div className="flex items-center gap-2 text-primary font-bold">
+                          <span className="text-xl">₹{(pkg.price || 0).toLocaleString("en-IN")}</span>
+                          <span className="text-xs text-muted-foreground font-medium">/ person</span>
+                        </div>
+                      </div>
+
+                      {pkg.description && (
+                        <p className="text-sm text-muted-foreground line-clamp-2 mb-4">
+                          {pkg.description}
+                        </p>
+                      )}
+                      
+                      <div className="grid grid-cols-2 gap-4 mb-8">
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <div className="p-2 bg-primary/5 rounded-lg">
+                            <Compass className="w-4 h-4 text-primary" />
+                          </div>
+                          <span>{pkg.transport || "Inclusive"}</span>
+                        </div>
+                        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <div className="p-2 bg-primary/5 rounded-lg">
+                            <Heart className="w-4 h-4 text-primary" />
+                          </div>
+                          <span>{pkg.maxPeople} Pax</span>
+                        </div>
+                      </div>
+
+                      <div className="flex gap-3 mt-auto">
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="outline" size="lg" className="flex-1 border-primary/20 hover:border-primary hover:bg-primary/5 text-primary font-bold">
+                              View Details
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto p-0 gap-0 border-none bg-background rounded-3xl shadow-2xl">
+                            <div className="relative h-64 sm:h-80 w-full">
+                              {pkg.image ? (
+                                <img 
+                                  src={pkg.image} 
+                                  alt={pkg.destination} 
+                                  className="w-full h-full object-cover"
+                                />
+                              ) : (
+                                <div className="w-full h-full bg-[#F5F0E8] flex items-center justify-center text-8xl grayscale opacity-30">
+                                  {pkg.emoji || "✈️"}
+                                </div>
+                              )}
+                              <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+                              <div className="absolute bottom-6 left-8 right-8">
+                                <div className="flex flex-wrap items-center gap-3 mb-2">
+                                  <span className="px-3 py-1 bg-primary text-white text-[10px] font-black tracking-widest uppercase rounded-lg shadow-lg">
+                                    {pkg.duration || "Best Value"}
+                                  </span>
+                                  <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-primary text-[10px] font-black tracking-widest uppercase rounded-lg shadow-sm">
+                                    {pkg.status || "Popular Choice"}
+                                  </span>
+                                </div>
+                                <h2 className="text-4xl font-heading font-bold text-foreground drop-shadow-sm">{pkg.destination}</h2>
+                              </div>
+                            </div>
+
+                            <div className="p-8">
+                              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <div className="md:col-span-2 space-y-8">
+                                  <section>
+                                    <h3 className="flex items-center gap-2 text-lg font-bold text-foreground mb-4 font-heading">
+                                      <Info className="w-5 h-5 text-primary" />
+                                      About this Package
+                                    </h3>
+                                    <p className="text-muted-foreground leading-relaxed text-base">
+                                      {pkg.description || `Embark on an extraordinary journey to ${pkg.destination}. Experience the perfect blend of comfort and exploration with our handcrafted itinerary, designed to give you the most authentic local experience.`}
+                                    </p>
+                                  </section>
+
+                                  {pkg.itinerary && pkg.itinerary.length > 0 && (
+                                    <section>
+                                      <h3 className="flex items-center gap-2 text-lg font-bold text-foreground mb-6 font-heading">
+                                        <Clock className="w-5 h-5 text-primary" />
+                                        Day-by-Day Itinerary
+                                      </h3>
+                                      <div className="space-y-6 relative ml-4 border-l-2 border-primary/10 pl-8">
+                                        {pkg.itinerary.map((day, idx) => (
+                                          <div key={idx} className="relative">
+                                            <div className="absolute -left-[41px] top-1 w-4 h-4 rounded-full bg-primary border-4 border-white shadow-sm" />
+                                            <p className="text-foreground/90 font-medium leading-relaxed">{day}</p>
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </section>
+                                  )}
+                                </div>
+
+                                <div className="space-y-6">
+                                  <div className="p-6 rounded-2xl bg-muted/30 border border-border/50 sticky top-4">
+                                    <div className="mb-6 pb-6 border-b border-border">
+                                      <span className="text-xs text-muted-foreground uppercase font-bold tracking-widest block mb-1">Package Price</span>
+                                      <div className="flex items-baseline gap-1">
+                                        <span className="text-3xl font-black text-primary">₹{(pkg.price || 0).toLocaleString("en-IN")}</span>
+                                        <span className="text-sm text-muted-foreground">/ person</span>
+                                      </div>
+                                    </div>
+
+                                    <div className="space-y-4 mb-8">
+                                      <div className="flex items-center justify-between text-sm">
+                                        <span className="text-muted-foreground">Duration:</span>
+                                        <span className="font-bold text-foreground">{pkg.duration || "Custom"}</span>
+                                      </div>
+                                      <div className="flex items-center justify-between text-sm">
+                                        <span className="text-muted-foreground">Group Size:</span>
+                                        <span className="font-bold text-foreground">Max {pkg.maxPeople} Pax</span>
+                                      </div>
+                                      <div className="flex items-center justify-between text-sm">
+                                        <span className="text-muted-foreground">Transport:</span>
+                                        <span className="font-bold text-foreground">{pkg.transport || "All Inclusive"}</span>
+                                      </div>
+                                    </div>
+
+                                    <Button variant="hero" size="lg" className="w-full shadow-xl" asChild>
+                                      <a href={`https://wa.me/91${CONTACT.phone.replace(/\s+/g, "")}?text=${encodeURIComponent(`Hi, I'm ready to book the ${pkg.destination} package for ₹${pkg.price}. Please let me know the nest steps.`)}`} target="_blank" rel="noopener noreferrer">
+                                        Book Now
+                                      </a>
+                                    </Button>
+                                    <p className="text-[10px] text-center text-muted-foreground mt-4 uppercase font-bold tracking-widest flex items-center justify-center gap-1">
+                                      <CheckCircle2 className="w-3 h-3 text-primary" /> Instant Confirmation
+                                    </p>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+
+                        <Button variant="hero" size="lg" className="flex-1 group" asChild>
+                          <a href={`https://wa.me/91${CONTACT.phone.replace(/\s+/g, "")}?text=${encodeURIComponent(`Hi, I'm interested in the ${pkg.destination} package for ₹${pkg.price}. Please share more details.`)}`} target="_blank" rel="noopener noreferrer">
+                            Book <ChevronDown className="w-4 h-4 ml-1 -rotate-90 group-hover:translate-x-1 transition-transform" />
+                          </a>
+                        </Button>
+                      </div>
+                    </div>
                   </div>
-                </Link>
-              </ScrollReveal>
-            ))}
-          </div>
+                </ScrollReveal>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
-      {/* STATS */}
       <section className="py-16 bg-secondary">
         <div className="container-wide grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {[

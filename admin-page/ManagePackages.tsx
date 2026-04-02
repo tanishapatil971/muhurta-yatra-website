@@ -1,17 +1,48 @@
-import { Search, Plus } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, Plus, Package } from "lucide-react";
+import { API_ENDPOINTS } from "../landing-page/src/config/api";
+
+interface TravelPackage {
+  _id: string;
+  destination: string;
+  price: number;
+  maxPeople: number;
+  transport?: string;
+  status?: string;
+  emoji?: string;
+}
 
 export default function ManagePackages({
   setActiveTab,
 }: {
   setActiveTab: (tab: 'dashboard' | 'add-package' | 'manage-packages' | 'enquiries') => void;
 }) {
-  // Dummy packages
-  const packages = [
-    { id: 1, destination: "Manali", price: 12000, maxPeople: 10, transport: "Bus", status: "Active", emoji: "🏔️" },
-    { id: 2, destination: "Goa", price: 18000, maxPeople: 8, transport: "Flight", status: "Active", emoji: "🏖️" },
-    { id: 3, destination: "Kerala", price: 15000, maxPeople: 12, transport: "Train", status: "Active", emoji: "🌴" },
-    { id: 4, destination: "Ladakh", price: 22000, maxPeople: 6, transport: "Flight", status: "Inactive", emoji: "⛰️" },
-  ];
+  const [packages, setPackages] = useState<TravelPackage[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch(API_ENDPOINTS.packages)
+      .then((res) => res.json())
+      .then((data) => {
+        setPackages(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-10 h-10 border-4 border-[#C75B2A] border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm font-medium text-[#8A7E74] animate-pulse">Loading packages...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
@@ -54,15 +85,25 @@ export default function ManagePackages({
             </tr>
           </thead>
           <tbody className="divide-y divide-[#EDE6D6] text-sm text-[#3D3630]">
-            {packages.map((pkg) => (
-              <tr
-                key={pkg.id}
-                className="transition-colors hover:bg-[#F5F0E8]/50"
-              >
+            {packages.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-12 text-center text-[#8A7E74]">
+                  <div className="flex flex-col items-center gap-2">
+                    <Package className="w-8 h-8 opacity-20" />
+                    <p>No packages found in database.</p>
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              packages.map((pkg) => (
+                <tr
+                  key={pkg._id}
+                  className="transition-colors hover:bg-[#F5F0E8]/50"
+                >
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
                     <div className="flex items-center justify-center w-10 h-10 text-lg text-white rounded-lg bg-gradient-to-br from-[#C75B2A] to-[#E88040]">
-                      {pkg.emoji}
+                      {pkg.emoji || "✈️"}
                     </div>
                     <span className="font-medium text-[#1A1714]">
                       {pkg.destination}
@@ -70,19 +111,19 @@ export default function ManagePackages({
                   </div>
                 </td>
                 <td className="px-6 py-4 font-medium">
-                  ₹{pkg.price.toLocaleString("en-IN")}
+                  ₹{(pkg.price || 0).toLocaleString("en-IN")}
                 </td>
                 <td className="px-6 py-4">{pkg.maxPeople} pax</td>
-                <td className="px-6 py-4">{pkg.transport}</td>
+                <td className="px-6 py-4">{pkg.transport || "General"}</td>
                 <td className="px-6 py-4">
                   <span
                     className={`inline-block px-3 py-1 text-[11px] font-bold tracking-widest uppercase rounded-full ${
-                      pkg.status === "Active"
+                      (pkg.status || "Active") === "Active"
                         ? "bg-[#27A66C]/10 text-[#27A66C]"
                         : "bg-[#C75B2A]/10 text-[#C75B2A]"
                     }`}
                   >
-                    {pkg.status}
+                    {pkg.status || "Active"}
                   </span>
                 </td>
                 <td className="px-6 py-4">
@@ -96,7 +137,7 @@ export default function ManagePackages({
                   </div>
                 </td>
               </tr>
-            ))}
+            )))}
           </tbody>
         </table>
       </div>

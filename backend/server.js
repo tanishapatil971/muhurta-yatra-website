@@ -4,6 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const enquiryRoutes = require('./routes/enquiryRoutes');
 const authRoutes = require('./routes/authRoutes');
+const packageRoutes = require('./routes/packageRoutes');
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use(express.json());
 // Routes
 app.use('/api/enquiries', enquiryRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/packages', packageRoutes);
 
 app.get('/test', (req, res) => {
   res.send('Backend working');
