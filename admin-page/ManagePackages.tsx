@@ -13,32 +13,65 @@ interface TravelPackage {
 }
 
 export default function ManagePackages({
+  packages,
+  loading,
+  error,
+  fetchPackages,
   setActiveTab,
+  onEdit,
 }: {
+  packages: TravelPackage[];
+  loading: boolean;
+  error: string;
+  fetchPackages: () => void;
   setActiveTab: (tab: 'dashboard' | 'add-package' | 'manage-packages' | 'enquiries') => void;
+  onEdit: (pkg: any) => void;
 }) {
-  const [packages, setPackages] = useState<TravelPackage[]>([]);
-  const [loading, setLoading] = useState(true);
+  const handleDelete = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this package?")) return;
 
-  useEffect(() => {
-    fetch(API_ENDPOINTS.packages)
-      .then((res) => res.json())
-      .then((data) => {
-        setPackages(data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
+    try {
+      const res = await fetch(`${API_ENDPOINTS.packages}/${id}`, {
+        method: "DELETE",
       });
-  }, []);
+
+      if (res.ok) {
+        alert("Package deleted successfully");
+        fetchPackages(); // Trigger refresh in parent
+      } else {
+        const errorData = await res.json();
+        alert(`Error: ${errorData.message || "Failed to delete package"}`);
+      }
+    } catch (err) {
+      console.error("Error deleting package:", err);
+      alert("Server error. Please try again.");
+    }
+  };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
           <div className="w-10 h-10 border-4 border-[#C75B2A] border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm font-medium text-[#8A7E74] animate-pulse">Loading packages...</p>
+          <p className="text-sm font-medium text-[#8A7E74] animate-pulse">Syncing package data...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="max-w-md p-8 text-center bg-rose-50 border border-rose-100 rounded-2xl">
+          <div className="text-3xl mb-4">🚫</div>
+          <h3 className="text-lg font-bold text-rose-800 mb-2">Connection Error</h3>
+          <p className="text-sm text-rose-600 mb-6">{error}</p>
+          <button 
+            onClick={fetchPackages}
+            className="px-6 py-2 bg-rose-600 text-white font-bold rounded-xl hover:bg-rose-700 transition-colors shadow-lg shadow-rose-200"
+          >
+            Retry Connection
+          </button>
         </div>
       </div>
     );
@@ -51,7 +84,7 @@ export default function ManagePackages({
           Manage Packages
         </h2>
         <p className="mt-1 text-sm text-[#8A7E74]">
-          View, edit, or remove existing travel packages.
+          View, edit, or remove existing travel packages from your database.
         </p>
       </div>
 
@@ -87,10 +120,21 @@ export default function ManagePackages({
           <tbody className="divide-y divide-[#EDE6D6] text-sm text-[#3D3630]">
             {packages.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-12 text-center text-[#8A7E74]">
-                  <div className="flex flex-col items-center gap-2">
-                    <Package className="w-8 h-8 opacity-20" />
-                    <p>No packages found in database.</p>
+                <td colSpan={6} className="px-6 py-16 text-center text-[#8A7E74]">
+                  <div className="flex flex-col items-center gap-4">
+                    <div className="p-4 bg-gray-100 rounded-full">
+                      <Package className="w-8 h-8 opacity-40 text-gray-400" />
+                    </div>
+                    <div className="space-y-1">
+                      <p className="font-bold text-gray-900">No packages available</p>
+                      <p className="text-xs">Your travel package database is currently empty.</p>
+                    </div>
+                    <button 
+                      onClick={() => setActiveTab("add-package")}
+                      className="mt-2 px-4 py-2 text-xs font-bold text-[#C75B2A] border border-[#C75B2A] rounded-lg hover:bg-[#C75B2A] hover:text-white transition-all"
+                    >
+                      + Add Your First Package
+                    </button>
                   </div>
                 </td>
               </tr>
@@ -128,10 +172,16 @@ export default function ManagePackages({
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-2">
-                    <button className="px-3 py-1.5 text-xs font-semibold text-[#2A7AC7] bg-[#2A7AC7]/10 rounded-lg hover:bg-[#2A7AC7] hover:text-white transition-colors">
+                    <button 
+                      onClick={() => onEdit(pkg)}
+                      className="px-3 py-1.5 text-xs font-semibold text-[#2A7AC7] bg-[#2A7AC7]/10 rounded-lg hover:bg-[#2A7AC7] hover:text-white transition-colors"
+                    >
                       Edit
                     </button>
-                    <button className="px-3 py-1.5 text-xs font-semibold text-[#C75B2A] bg-[#C75B2A]/10 rounded-lg hover:bg-[#C75B2A] hover:text-white transition-colors">
+                    <button 
+                      onClick={() => handleDelete(pkg._id)}
+                      className="px-3 py-1.5 text-xs font-semibold text-[#C75B2A] bg-[#C75B2A]/10 rounded-lg hover:bg-[#C75B2A] hover:text-white transition-colors"
+                    >
                       Delete
                     </button>
                   </div>

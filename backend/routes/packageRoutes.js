@@ -39,4 +39,39 @@ router.get('/', async (req, res) => {
   }
 });
 
+// PATCH /api/packages/:id - Update a package
+router.patch('/:id', async (req, res) => {
+  try {
+    const updatedPackage = await Package.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedPackage) {
+      return res.status(404).json({ message: 'Package not found' });
+    }
+
+    res.json(updatedPackage);
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// DELETE /api/packages/:id - Delete a package
+router.delete('/:id', async (req, res) => {
+  try {
+    const packageToDelete = await Package.findById(req.params.id);
+    
+    if (!packageToDelete) {
+      return res.status(404).json({ message: 'Package not found' });
+    }
+
+    await Package.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Package deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router;
