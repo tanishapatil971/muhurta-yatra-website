@@ -71,6 +71,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         body: JSON.stringify({ name, email, password, role }),
       });
 
+      // Special handling for 503 Service Unavailable (DB Disconnected)
+      if (response.status === 503) {
+        const data = await response.json();
+        const errorMessage = data.error || data.message || 'Database connection error';
+        toast.error(`Service Unavailable: ${errorMessage}`, {
+          duration: 6000, // Show longer for critical errors
+        });
+        throw new Error(errorMessage);
+      }
+
       const data = await response.json();
 
       if (!response.ok) {
@@ -79,7 +89,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       toast.success('Registration successful! Please login.');
     } catch (error: any) {
-      toast.error(error.message);
+      // Don't show redundant toast if already shown for 503
+      if (error.message !== 'Database connection error') {
+        toast.error(error.message);
+      }
       throw error;
     }
   };

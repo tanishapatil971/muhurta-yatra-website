@@ -28,9 +28,21 @@ app.use((req, res, next) => {
     next();
 });
 
+// 🛣️ Middleware: Database Connectivity Check (Stops auth routes if DB is down)
+const dbCheck = (req, res, next) => {
+    if (mongoose.connection.readyState !== 1) {
+        console.error(`[CRITICAL] 🛑 Auth request denied: MongoDB is DISCONNECTED.`);
+        return res.status(503).json({ 
+            message: 'Authentication service temporarily unavailable.', 
+            error: 'Database connection is not established. Please check MongoDB Atlas IP whitelisting.' 
+        });
+    }
+    next();
+};
+
 // 🛣️ Routes
 app.use('/api/enquiries', enquiryRoutes);
-app.use('/api/auth', authRoutes);
+app.use('/api/auth', dbCheck, authRoutes); // Auth routes now have strict DB dependency
 app.use('/api/packages', packageRoutes);
 app.use('/api/bookings', bookingRoutes);
 
