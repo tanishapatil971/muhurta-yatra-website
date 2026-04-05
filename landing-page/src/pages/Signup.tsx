@@ -7,10 +7,8 @@ import { Loader2 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
 export default function Signup() {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { register } = useAuth();
-  const roleVal = searchParams.get("role") === "admin" ? "admin" : "traveller";
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -21,8 +19,9 @@ export default function Signup() {
     e.preventDefault();
     setIsSubmitting(true);
     try {
-      await register(name, email, password, roleVal);
-      navigate(`/login?role=${roleVal}`);
+      // Register with default 'user' role
+      await register(name, email, password, "user");
+      navigate("/login");
     } catch (error) {
       console.error("Signup error:", error);
     } finally {
@@ -35,7 +34,7 @@ export default function Signup() {
       <div className="glass-card w-full max-w-md p-8 animate-fade-up">
         <div className="text-center mb-8">
           <h1 className="font-heading text-3xl font-bold text-foreground">Create Account</h1>
-          <p className="text-muted-foreground mt-2">Join us as a {roleVal === "admin" ? "Partner / Admin" : "Traveller"}</p>
+          <p className="text-muted-foreground mt-2">Join us to start your next yatra</p>
         </div>
 
         <form onSubmit={handleSignup} className="space-y-4">
@@ -92,7 +91,7 @@ export default function Signup() {
 
         <div className="mt-6 text-center text-sm text-muted-foreground">
           Already have an account?{" "}
-          <Link to={`/login?role=${roleVal}`} className="text-primary font-semibold hover:underline">
+          <Link to="/login" className="text-primary font-semibold hover:underline">
             Log in
           </Link>
         </div>

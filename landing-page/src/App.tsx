@@ -80,6 +80,8 @@ function GlobalErrorBoundary({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
+import ProtectedRoute from "./components/ProtectedRoute";
+
 function AppContent() {
   const location = useLocation();
   console.log("TRACING: Rendering AppContent for path:", location?.pathname);
@@ -106,13 +108,15 @@ function AppContent() {
         <Route path="/faqs" element={<FAQs />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/booking" element={<BookingPage />} />
+        
+        {/* Protected Routes */}
+        <Route path="/booking" element={<ProtectedRoute><BookingPage /></ProtectedRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/my-trips" element={<ProtectedRoute><MyTrips /></ProtectedRoute>} />
+        <Route path="/explore" element={<ProtectedRoute><Explore /></ProtectedRoute>} />
+        <Route path="/personalized" element={<ProtectedRoute><Personalized /></ProtectedRoute>} />
 
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/my-trips" element={<MyTrips />} />
-        <Route path="/explore" element={<Explore />} />
-        <Route path="/personalized" element={<Personalized />} />
-
+        {/* Admin remains separate or also could be protected if needed */}
         <Route path="/admin" element={<AdminPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
