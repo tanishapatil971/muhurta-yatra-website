@@ -5,39 +5,65 @@ const dotenv = require('dotenv');
 const enquiryRoutes = require('./routes/enquiryRoutes');
 const authRoutes = require('./routes/authRoutes');
 const packageRoutes = require('./routes/packageRoutes');
+const bookingRoutes = require('./routes/bookingRoutes');
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/muhurta_yatra';
+const MONGO_URI = process.env.MONGO_URI;
 
-// Middleware
+// 🛡️ Middleware: Essential Setup
 app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST", "PATCH", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+    origin: "*", // Adjust for specific origins when in production
+    methods: ["GET", "POST", "PATCH", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"]
 }));
 app.use(express.json());
 
-// Routes
+// 📝 Middleware: API Hit Logger
+app.use((req, res, next) => {
+    const timestamp = new Date().toISOString();
+    console.log(`[${timestamp}] 🚀 ${req.method} API Hit: ${req.url}`);
+    next();
+});
+
+// 🛣️ Routes
 app.use('/api/enquiries', enquiryRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/packages', packageRoutes);
+app.use('/api/bookings', bookingRoutes);
 
-app.get('/test', (req, res) => {
-  res.send('Backend working');
+// 🔍 Health Check
+app.get('/api/health', (req, res) => {
+    res.status(200).json({ 
+        status: 'UP', 
+        database: mongoose.connection.readyState === 1 ? 'CONNECTED' : 'DISCONNECTED'
+    });
 });
 
-// Connect to MongoDB
-mongoose.connect(MONGO_URI, { 
-  serverSelectionTimeoutMS: 5000 
-})
-  .then(() => {
-    console.log("MongoDB Connected");
-    // Start server after DB connection is established
+// 🌐 Connect to MongoDB & Start Server
+const startServer = async () => {
+    console.log("🕒 Connecting to MongoDB...");
+    try {
+        if (!MONGO_URI) {
+            throw new Error("❌ MONGO_URI is not defined in environment variables.");
+        }
+        
+        await mongoose.connect(MONGO_URI, { 
+            serverSelectionTimeoutMS: 8000 
+        });
+        console.log("✅ MongoDB Connection Established Successfully.");
+    } catch (err) {
+        console.error("❌ MongoDB Connection Error:", err.message);
+        console.warn("⚠️  Server will continue to run in FALLBACK DUMMY DATA mode.");
+    }
+
     app.listen(PORT, '0.0.0.0', () => {
-      console.log("Server running on port 5000");
+        console.log(`\n🚀 Server is up and running correctly!`);
+        console.log(`📁 API Base URL: http://localhost:${PORT}/api`);
+        console.log(`🌍 Health Check: http://localhost:${PORT}/api/health\n`);
     });
-  })
-  .catch(err => console.error("MongoDB Error:", err));
+};
+
+startServer();

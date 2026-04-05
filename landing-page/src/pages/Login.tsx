@@ -4,24 +4,36 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Compass, Shield } from "lucide-react";
+import { Compass, Shield, Loader2 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Login() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { login } = useAuth();
 
-  const initialRole =
-    searchParams.get("role") === "admin" ? "admin" : "traveller";
+  const initialRole = searchParams.get("role") === "admin" ? "admin" : "traveller";
   const [role, setRole] = useState(initialRole);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
-    // ✅ React routing (correct way)
-    if (role === "admin") {
-      navigate("/admin");
-    } else {
-      navigate("/dashboard");
+    try {
+      await login(email, password);
+      // Redirect based on role returned by backend or chosen in tabs
+      if (role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/dashboard");
+      }
+    } catch (error) {
+      console.error("Login component error:", error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -58,6 +70,9 @@ export default function Login() {
               placeholder="you@example.com"
               required
               className="bg-background"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isSubmitting}
             />
           </div>
 
@@ -67,11 +82,21 @@ export default function Login() {
               type="password"
               required
               className="bg-background"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={isSubmitting}
             />
           </div>
 
-          <Button type="submit" variant="hero" className="w-full mt-6">
-            Sign In as {role === "admin" ? "Admin" : "Traveller"}
+          <Button type="submit" variant="hero" className="w-full mt-6" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Signing In...
+              </>
+            ) : (
+              `Sign In as ${role === "admin" ? "Admin" : "Traveller"}`
+            )}
           </Button>
         </form>
 

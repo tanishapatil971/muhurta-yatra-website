@@ -1,32 +1,32 @@
-import { useState, useEffect } from "react";
-import { Search, Plus, Package } from "lucide-react";
+import { useState } from "react";
+import { Search, Plus, Package as PackageIcon } from "lucide-react";
 import { API_ENDPOINTS } from "../landing-page/src/config/api";
+import { TravelPackage, AdminTab } from "./AdminPage";
 
-interface TravelPackage {
-  _id: string;
-  destination: string;
-  price: number;
-  maxPeople: number;
-  transport?: string;
-  status?: string;
-  emoji?: string;
+interface ManagePackagesProps {
+  packages: TravelPackage[];
+  loading: boolean;
+  error: string;
+  fetchPackages: () => void;
+  setActiveTab: (tab: AdminTab) => void;
+  onEdit: (pkg: TravelPackage) => void;
 }
 
 export default function ManagePackages({
-  packages,
+  packages = [], // Default to empty array
   loading,
   error,
   fetchPackages,
   setActiveTab,
   onEdit,
-}: {
-  packages: TravelPackage[];
-  loading: boolean;
-  error: string;
-  fetchPackages: () => void;
-  setActiveTab: (tab: 'dashboard' | 'add-package' | 'manage-packages' | 'enquiries') => void;
-  onEdit: (pkg: any) => void;
-}) {
+}: ManagePackagesProps) {
+  console.log("TRACING: Rendering ManagePackages");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const filteredPackages = (packages || []).filter(pkg => 
+    (pkg.destination || "").toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const handleDelete = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this package?")) return;
 
@@ -95,6 +95,8 @@ export default function ManagePackages({
             type="text"
             placeholder="Search destination..."
             className="w-full bg-transparent outline-none text-[15px]"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <button
@@ -118,28 +120,32 @@ export default function ManagePackages({
             </tr>
           </thead>
           <tbody className="divide-y divide-[#EDE6D6] text-sm text-[#3D3630]">
-            {packages.length === 0 ? (
+            {filteredPackages.length === 0 ? (
               <tr>
                 <td colSpan={6} className="px-6 py-16 text-center text-[#8A7E74]">
                   <div className="flex flex-col items-center gap-4">
                     <div className="p-4 bg-gray-100 rounded-full">
-                      <Package className="w-8 h-8 opacity-40 text-gray-400" />
+                      <PackageIcon className="w-8 h-8 opacity-40 text-gray-400" />
                     </div>
                     <div className="space-y-1">
-                      <p className="font-bold text-gray-900">No packages available</p>
-                      <p className="text-xs">Your travel package database is currently empty.</p>
+                      <p className="font-bold text-gray-900">No packages found</p>
+                      <p className="text-xs">
+                        {searchTerm ? "Try a different search term" : "Your travel package database is currently empty."}
+                      </p>
                     </div>
-                    <button 
-                      onClick={() => setActiveTab("add-package")}
-                      className="mt-2 px-4 py-2 text-xs font-bold text-[#C75B2A] border border-[#C75B2A] rounded-lg hover:bg-[#C75B2A] hover:text-white transition-all"
-                    >
-                      + Add Your First Package
-                    </button>
+                    {!searchTerm && (
+                      <button 
+                        onClick={() => setActiveTab("add-package")}
+                        className="mt-2 px-4 py-2 text-xs font-bold text-[#C75B2A] border border-[#C75B2A] rounded-lg hover:bg-[#C75B2A] hover:text-white transition-all"
+                      >
+                        + Add Your First Package
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>
             ) : (
-              packages.map((pkg) => (
+              filteredPackages.map((pkg) => (
                 <tr
                   key={pkg._id}
                   className="transition-colors hover:bg-[#F5F0E8]/50"
@@ -150,14 +156,14 @@ export default function ManagePackages({
                       {pkg.emoji || "✈️"}
                     </div>
                     <span className="font-medium text-[#1A1714]">
-                      {pkg.destination}
+                      {pkg.destination || "Unknown"}
                     </span>
                   </div>
                 </td>
                 <td className="px-6 py-4 font-medium">
                   ₹{(pkg.price || 0).toLocaleString("en-IN")}
                 </td>
-                <td className="px-6 py-4">{pkg.maxPeople} pax</td>
+                <td className="px-6 py-4">{(pkg.maxPeople || 0)} pax</td>
                 <td className="px-6 py-4">{pkg.transport || "General"}</td>
                 <td className="px-6 py-4">
                   <span

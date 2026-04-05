@@ -3,16 +3,31 @@ import { Link, useSearchParams, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Loader2 } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 export default function Signup() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { register } = useAuth();
   const roleVal = searchParams.get("role") === "admin" ? "admin" : "traveller";
 
-  const handleSignup = (e: React.FormEvent) => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate signup, then go to login or directly mapping
-    navigate(`/login?role=${roleVal}`);
+    setIsSubmitting(true);
+    try {
+      await register(name, email, password, roleVal);
+      navigate(`/login?role=${roleVal}`);
+    } catch (error) {
+      console.error("Signup error:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -26,19 +41,52 @@ export default function Signup() {
         <form onSubmit={handleSignup} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Full Name</Label>
-            <Input id="name" type="text" placeholder="John Doe" required className="bg-background" />
+            <Input 
+              id="name" 
+              type="text" 
+              placeholder="John Doe" 
+              required 
+              className="bg-background" 
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              disabled={isSubmitting}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="email">Email Address</Label>
-            <Input id="email" type="email" placeholder="you@example.com" required className="bg-background" />
+            <Input 
+              id="email" 
+              type="email" 
+              placeholder="you@example.com" 
+              required 
+              className="bg-background" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={isSubmitting}
+            />
           </div>
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" required className="bg-background" />
+            <Input 
+              id="password" 
+              type="password" 
+              required 
+              className="bg-background" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              disabled={isSubmitting}
+            />
           </div>
           
-          <Button type="submit" variant="hero" className="w-full mt-6">
-            Sign Up
+          <Button type="submit" variant="hero" className="w-full mt-6" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Creating Account...
+              </>
+            ) : (
+              "Sign Up"
+            )}
           </Button>
         </form>
 

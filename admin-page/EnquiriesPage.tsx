@@ -53,6 +53,7 @@ const DUMMY_ENQUIRIES: Enquiry[] = [
 ];
 
 export default function EnquiriesPage() {
+  console.log("TRACING: Rendering EnquiriesPage");
   const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -41,7 +41,7 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await user.comparePassword(password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid credentials' });
     }
@@ -54,10 +54,18 @@ router.post('/login', async (req, res) => {
     jwt.sign(
       payload,
       process.env.JWT_SECRET || 'fallback_secret',
-      { expiresIn: '1d' },
+      { expiresIn: '7d' },
       (err, token) => {
         if (err) throw err;
-        res.json({ token, role: user.role });
+        res.json({ 
+          token, 
+          user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role
+          }
+        });
       }
     );
   } catch (error) {

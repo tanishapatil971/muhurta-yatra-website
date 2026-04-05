@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import ScrollReveal from "@/components/ScrollReveal";
 import { CONTACT } from "@/config/contact";
@@ -59,6 +59,8 @@ const testimonials = [
 // Removed static destinations in favor of dynamic backend packages
 
 export default function Index() {
+  const navigate = useNavigate();
+  console.log("TRACING: Rendering Index (Homepage)");
   const [currentSlide, setCurrentSlide] = useState(0);
   const [testimonialIdx, setTestimonialIdx] = useState(0);
   const [name, setName] = useState("");
@@ -72,6 +74,17 @@ export default function Index() {
   const { toast } = useToast();
   const contactHref = `tel:+91${CONTACT.phone.replace(/\s+/g, "")}`;
   const whatsappHref = `https://wa.me/91${CONTACT.phone.replace(/\s+/g, "")}?text=${encodeURIComponent(CONTACT.whatsappMessage)}`;
+
+  const handleWhatsApp = useCallback((pkg?: TravelPackage) => {
+    console.log("TRACING: handleWhatsApp called", pkg ? `for ${pkg.destination}` : "generic");
+    const phoneNumber = "91" + CONTACT.phone.replace(/\s+/g, "");
+    const message = pkg 
+      ? `Hi Muhurta Yatra, I'm interested in the ${pkg.destination} package (${pkg.duration || "Special"}). Can you share more details?`
+      : CONTACT.whatsappMessage || "Hi Muhurta Yatra, I'd like to plan a trip. Can you help me?";
+    
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+    window.open(url, "_blank");
+  }, []);
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((p) => (p + 1) % heroSlides.length);
@@ -89,7 +102,12 @@ export default function Index() {
       const res = await fetch(API_ENDPOINTS.packages);
       if (!res.ok) throw new Error("Could not fetch latest packages");
       const data = await res.json();
-      setPackages(data.slice(0, 6)); // Limit to latest 6
+      if (Array.isArray(data)) {
+        setPackages(data.slice(0, 6)); // Limit to latest 6
+      } else {
+        console.error("API returned non-array data for packages:", data);
+        setPackages([]);
+      }
     } catch (err: any) {
       console.error("Error fetching packages:", err);
       setErrorPackages("We're having trouble loading our latest tours. Please try again in a moment.");
@@ -166,13 +184,25 @@ export default function Index() {
             <Button variant="hero" size="lg" asChild>
               <Link to="/places">Explore Destinations</Link>
             </Button>
-            <Button variant="heroOutline" size="lg" asChild>
-              <a href={contactHref}>Book Your Yatra</a>
+            <Button 
+              type="button"
+              variant="heroOutline" 
+              size="lg" 
+              onClick={() => {
+                console.log("TRACING: Hero 'Book Your Yatra' clicked - Navigating to Booking");
+                navigate('/booking');
+              }}
+            >
+              Book Your Yatra
             </Button>
-            <Button variant="hero" size="lg" className="bg-[hsl(142,70%,40%)] hover:bg-[hsl(142,70%,35%)]" asChild>
-              <a href={whatsappHref} target="_blank" rel="noopener noreferrer">
-                Chat on WhatsApp
-              </a>
+            <Button 
+              type="button"
+              variant="hero" 
+              size="lg" 
+              className="bg-[hsl(142,70%,40%)] hover:bg-[hsl(142,70%,35%)]"
+              onClick={() => handleWhatsApp()}
+            >
+              Chat on WhatsApp
             </Button>
           </div>
           {/* Slide indicators */}
@@ -278,8 +308,13 @@ export default function Index() {
               <p className="text-muted-foreground italic max-w-md mx-auto mb-8">
                 Our team is currently crafting new unforgettable journeys. Check back soon or contact us for a custom plan!
               </p>
-              <Button variant="outline" asChild className="rounded-xl border-primary/20 text-primary font-bold">
-                <a href={whatsappHref} target="_blank" rel="noopener noreferrer">Contact for Custom Trip</a>
+              <Button 
+                type="button"
+                variant="outline" 
+                className="rounded-xl border-primary/20 text-primary font-bold"
+                onClick={() => handleWhatsApp()}
+              >
+                Contact for Custom Trip
               </Button>
             </div>
           ) : (
@@ -368,7 +403,7 @@ export default function Index() {
                               View Details
                             </Button>
                           </DialogTrigger>
-                          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto p-0 gap-0 border-none bg-background rounded-[3rem] shadow-2xl animate-in zoom-in-95 duration-300">
+                          <DialogContent className="max-w-6xl max-h-[95vh] overflow-y-auto p-0 gap-0 border-none bg-background rounded-[2.5rem] shadow-2xl animate-in zoom-in-95 duration-300">
                             {pkg ? (
                               <>
                                 {/* Modal Header/Image */}
@@ -403,86 +438,96 @@ export default function Index() {
                                 </div>
 
                                 {/* Modal Body */}
-                                <div className="p-10 md:p-14">
-                                  <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                                    <div className="lg:col-span-8 space-y-12">
-                                      <section>
-                                        <div className="flex items-center gap-3 mb-6">
-                                          <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
-                                            <Info className="w-5 h-5 text-primary" />
+                                <div className="p-6 md:p-10 lg:p-12">
+                                  <div className="max-w-6xl mx-auto">
+                                    <div className="flex flex-col lg:flex-row gap-8 lg:items-start">
+                                      {/* Left Column: Timeline (60%) */}
+                                      <div className="flex-[6] space-y-10">
+                                        <section>
+                                          <div className="flex items-center gap-3 mb-6">
+                                            <div className="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center">
+                                              <Info className="w-5 h-5 text-primary" />
+                                            </div>
+                                            <h3 className="text-2xl font-bold text-foreground font-heading">The Experience</h3>
                                           </div>
-                                          <h3 className="text-2xl font-bold text-foreground font-heading">The Experience</h3>
-                                        </div>
-                                        <p className="text-muted-foreground leading-relaxed text-lg italic border-l-4 border-primary/20 pl-6 py-2">
-                                          {pkg.description || `Experience the true essence of ${pkg.destination || "India"}. Our handcrafted itinerary is designed for maximum comfort and an authentic local experience.`}
-                                        </p>
-                                      </section>
+                                          <p className="text-muted-foreground leading-relaxed text-lg italic border-l-4 border-primary/20 pl-6 py-2">
+                                            {pkg.description || `Experience the true essence of ${pkg.destination || "India"}. Our handcrafted itinerary is designed for maximum comfort and an authentic local experience.`}
+                                          </p>
+                                        </section>
 
-                                      <section>
-                                        <div className="flex items-center gap-3 mb-10">
-                                          <div className="w-10 h-10 bg-sunset/10 rounded-xl flex items-center justify-center">
-                                            <Clock className="w-5 h-5 text-sunset" />
+                                        <section>
+                                          <div className="flex items-center gap-3 mb-10">
+                                            <div className="w-10 h-10 bg-sunset/10 rounded-xl flex items-center justify-center">
+                                              <Clock className="w-5 h-5 text-sunset" />
+                                            </div>
+                                            <h3 className="text-2xl font-bold text-foreground font-heading">Day-by-Day Journey</h3>
                                           </div>
-                                          <h3 className="text-2xl font-bold text-foreground font-heading">Day-by-Day Journey</h3>
-                                        </div>
-                                        <div className="space-y-10 relative ml-6 border-l-2 border-primary/10 pl-12 pb-4">
-                                          {(pkg.itinerary?.length || 0) > 0 ? (
-                                            pkg.itinerary?.map((day: string, idx: number) => (
-                                              <div key={idx} className="relative">
-                                                <div className="absolute -left-[61px] top-1.5 w-6 h-6 rounded-full bg-white border-[6px] border-primary shadow-md z-10" />
-                                                <div className="flex flex-col gap-2">
-                                                  <span className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Day {idx + 1}</span>
-                                                  <p className="text-foreground/90 font-medium leading-relaxed text-lg">{day}</p>
+                                          <div className="relative mt-8 ml-3 border-l-2 border-primary/10">
+                                            {(pkg.itinerary?.length || 0) > 0 ? (
+                                              pkg.itinerary?.map((day: string, idx: number) => (
+                                                <div key={idx} className="relative pl-10 pb-10 last:pb-4 flex items-start gap-4">
+                                                  <div className="absolute -left-[11px] top-1.5 w-5 h-5 rounded-full bg-white border-[5px] border-primary shadow-md z-10" />
+                                                  <div className="flex flex-col gap-1.5">
+                                                    <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Day {idx + 1}</span>
+                                                    <p className="text-foreground/90 font-medium leading-relaxed text-lg">{day}</p>
+                                                  </div>
                                                 </div>
-                                              </div>
-                                            ))
-                                          ) : (
-                                            <p className="text-muted-foreground italic">Standard tour itinerary applies. Specific daily details will be provided upon booking.</p>
-                                          )}
-                                        </div>
-                                      </section>
-                                    </div>
+                                              ))
+                                            ) : (
+                                              <p className="text-muted-foreground italic pl-10">Standard tour itinerary applies. Specific daily details will be provided upon booking.</p>
+                                            )}
+                                          </div>
+                                        </section>
+                                      </div>
 
-                                    {/* Sidebar Info */}
-                                    <div className="lg:col-span-4">
-                                      <div className="p-10 rounded-[2.5rem] bg-muted/30 border border-border/40 space-y-10 sticky top-10">
-                                        <div className="pb-8 border-b border-border/50">
-                                          <span className="text-[10px] text-muted-foreground uppercase font-black tracking-[0.2em] block mb-3">Package Value</span>
-                                          <div className="flex flex-col">
-                                            <span className="text-sm text-muted-foreground font-medium mb-1">Starting at</span>
-                                            <div className="flex items-baseline gap-2">
-                                              <span className="text-5xl font-black text-primary">₹{(pkg.price || 0).toLocaleString("en-IN")}</span>
-                                              <span className="text-xs text-muted-foreground font-bold uppercase tracking-widest">/ Pax</span>
+                                      {/* Right Column: Package Details Card (40%) */}
+                                      <div className="flex-[4] lg:sticky lg:top-20">
+                                        <div className="p-8 rounded-[2rem] bg-muted/30 border border-border/40 space-y-8">
+                                          <div className="pb-6 border-b border-border/50">
+                                            <span className="text-[10px] text-muted-foreground uppercase font-black tracking-[0.2em] block mb-2">Package Value</span>
+                                            <div className="flex flex-col">
+                                              <span className="text-xs text-muted-foreground font-medium mb-1">Starting at</span>
+                                              <div className="flex items-baseline gap-2">
+                                                <span className="text-4xl font-black text-primary">₹{(pkg.price || 0).toLocaleString("en-IN")}</span>
+                                                <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">/ Pax</span>
+                                              </div>
                                             </div>
                                           </div>
-                                        </div>
 
-                                        <div className="space-y-6">
-                                          <div className="flex items-center justify-between">
-                                            <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest underline decoration-primary/20 decoration-2 underline-offset-4">Duration</span>
-                                            <span className="font-black text-foreground">{pkg.duration || "Special"}</span>
+                                          <div className="space-y-5">
+                                            <div className="flex items-center justify-between">
+                                              <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest underline decoration-primary/20 decoration-2 underline-offset-4 font-heading">Duration</span>
+                                              <span className="font-extrabold text-foreground text-sm">{pkg.duration || "Special"}</span>
+                                            </div>
+                                            <div className="flex items-center justify-between">
+                                              <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest underline decoration-primary/20 decoration-2 underline-offset-4 font-heading">Max Capacity</span>
+                                              <span className="font-extrabold text-foreground text-sm underline decoration-sunset/20 decoration-4 underline-offset-2">{pkg.maxPeople || "Flexible"} travelers</span>
+                                            </div>
+                                            <div className="flex items-center justify-between">
+                                              <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest underline decoration-primary/20 decoration-2 underline-offset-4 font-heading">Transport</span>
+                                              <span className="font-extrabold text-foreground text-sm">{pkg.transport || "All Inclusive"}</span>
+                                            </div>
                                           </div>
-                                          <div className="flex items-center justify-between">
-                                            <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest underline decoration-primary/20 decoration-2 underline-offset-4">Max Capacity</span>
-                                            <span className="font-black text-foreground underline decoration-sunset/20 decoration-4 underline-offset-2">{pkg.maxPeople || "Flexible"} travelers</span>
-                                          </div>
-                                          <div className="flex items-center justify-between">
-                                            <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest underline decoration-primary/20 decoration-2 underline-offset-4">Transport</span>
-                                            <span className="font-black text-foreground">{pkg.transport || "All Inclusive"}</span>
-                                          </div>
-                                        </div>
 
-                                        <Button variant="hero" size="lg" className="w-full h-16 rounded-2xl shadow-2xl shadow-primary/30 group" asChild>
-                                          <a href={`https://wa.me/91${CONTACT.phone.replace(/\s+/g, "")}?text=${encodeURIComponent(`Namaste! I would like to book the ${pkg.destination || "travel"} package (${pkg.duration || "limited offer"}) for ₹${pkg.price || "current price"}. Please guide me further.`)}`} target="_blank" rel="noopener noreferrer">
-                                            Reserve Your Seat <ChevronDown className="w-4 h-4 ml-2 -rotate-90 group-hover:translate-x-1 transition-transform" />
-                                          </a>
-                                        </Button>
-                                        
-                                        <div className="flex items-center justify-center gap-3 pt-4 opacity-70">
-                                          <div className="p-2 bg-[#25D366]/10 rounded-lg">
-                                            <CheckCircle2 className="w-4 h-4 text-[#25D366]" />
+                                          <Button 
+                                            variant="hero" 
+                                            size="lg" 
+                                            className="w-full h-14 rounded-xl shadow-xl shadow-primary/20 group flex items-center justify-center gap-2" 
+                                            onClick={(e) => {
+                                              e.preventDefault();
+                                              console.log("TRACING: Modal 'Confirm Booking' clicked for:", pkg.destination);
+                                              navigate('/booking', { state: { selectedPackage: pkg } });
+                                            }}
+                                          >
+                                            Confirm Booking & Reserve <ChevronDown className="w-4 h-4 -rotate-90 group-hover:translate-x-1 transition-transform" />
+                                          </Button>
+                                          
+                                          <div className="flex items-center justify-center gap-2 pt-2 opacity-60">
+                                            <div className="p-1.5 bg-[#25D366]/10 rounded-lg">
+                                              <CheckCircle2 className="w-3.5 h-3.5 text-[#25D366]" />
+                                            </div>
+                                            <span className="text-[9px] font-black text-muted-foreground uppercase tracking-[0.1em]">Instant Confirmation Available</span>
                                           </div>
-                                          <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.1em]">Instant Check</span>
                                         </div>
                                       </div>
                                     </div>
@@ -495,10 +540,18 @@ export default function Index() {
                           </DialogContent>
                         </Dialog>
 
-                        <Button variant="hero" size="lg" className="flex-1 rounded-2xl group shadow-lg shadow-primary/20" asChild>
-                          <a href={`https://wa.me/91${CONTACT.phone.replace(/\s+/g, "")}?text=${encodeURIComponent(`Hi Muhurta Yatra, I'm interested in the ${pkg.destination || "package"}. Can you share more details?`)}`} target="_blank" rel="noopener noreferrer">
-                            Book <ChevronDown className="w-4 h-4 ml-1 -rotate-90 group-hover:translate-x-1 transition-transform" />
-                          </a>
+                        <Button 
+                          type="button"
+                          variant="hero" 
+                          size="lg" 
+                          className="flex-1 rounded-2xl group shadow-lg shadow-primary/20 flex items-center justify-center gap-2" 
+                          onClick={(e) => {
+                            e.preventDefault();
+                            console.log("TRACING: Card 'Book Now' clicked for:", pkg.destination);
+                            navigate('/booking', { state: { selectedPackage: pkg } });
+                          }}
+                        >
+                          Book Now <ChevronDown className="w-4 h-4 ml-1 -rotate-90 group-hover:translate-x-1 transition-transform" />
                         </Button>
                       </div>
                     </div>

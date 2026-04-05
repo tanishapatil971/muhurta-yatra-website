@@ -1,15 +1,19 @@
 import { useState, useEffect } from "react";
 import { API_ENDPOINTS } from "../landing-page/src/config/api";
+import { TravelPackage } from "./AdminPage";
+
+interface AddPackageProps {
+  isEditing?: boolean;
+  editData?: TravelPackage | null;
+  onDone?: () => void;
+}
 
 export default function AddPackage({ 
   isEditing = false, 
   editData = null, 
   onDone = () => {} 
-}: { 
-  isEditing?: boolean; 
-  editData?: any; 
-  onDone?: () => void; 
-}) {
+}: AddPackageProps) {
+  console.log("TRACING: Rendering AddPackage");
   const [formData, setFormData] = useState({
     destination: "",
     price: "",
@@ -28,12 +32,12 @@ export default function AddPackage({
     if (isEditing && editData) {
       setFormData({
         destination: editData.destination || "",
-        price: editData.price || "",
-        maxPeople: editData.maxPeople || "",
+        price: String(editData.price || ""),
+        maxPeople: String(editData.maxPeople || ""),
         image: editData.image || "",
         duration: editData.duration || "",
         description: editData.description || "",
-        itinerary: (editData.itinerary || []).join("\n")
+        itinerary: Array.isArray(editData.itinerary) ? editData.itinerary.join("\n") : ""
       });
     } else {
       // Reset form if not editing
@@ -50,7 +54,8 @@ export default function AddPackage({
   }, [isEditing, editData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -58,8 +63,14 @@ export default function AddPackage({
     setSuccess(false);
     setError("");
 
+    // Defensive check for missing API config
+    if (!API_ENDPOINTS?.packages) {
+      setError("API configuration error. Please contact support.");
+      return;
+    }
+
     try {
-      const url = isEditing 
+      const url = isEditing && editData?._id 
         ? `${API_ENDPOINTS.packages}/${editData._id}` 
         : API_ENDPOINTS.packages;
       
@@ -72,9 +83,9 @@ export default function AddPackage({
         },
         body: JSON.stringify({
           ...formData,
-          price: Number(formData.price),
-          maxPeople: Number(formData.maxPeople),
-          itinerary: formData.itinerary.split("\n").filter(line => line.trim() !== "")
+          price: Number(formData.price) || 0,
+          maxPeople: Number(formData.maxPeople) || 1,
+          itinerary: (formData.itinerary || "").split("\n").filter(line => line.trim() !== "")
         })
       });
 
@@ -92,22 +103,22 @@ export default function AddPackage({
           });
         }
         
-        // Auto hide success message
+        // Auto hide success message and trigger completion
         setTimeout(() => {
           setSuccess(false);
           if (isEditing) onDone();
         }, 1500);
 
-        // Scroll to top
+        // Scroll to top safely
         window.scrollTo({ top: 0, behavior: "smooth" });
       } else {
-        const errorData = await res.json();
-        setError(errorData.message || "Something went wrong");
+        const errorData = await res.json().catch(() => ({}));
+        setError(errorData.message || "Failed to save package. Please try again.");
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
     } catch (err) {
-      console.error(err);
-      setError("Error processing request. Please check your connection.");
+      console.error("Form submission error:", err);
+      setError("Network error. Please check your connection and try again.");
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
