@@ -1,5 +1,0 @@
-﻿src/components/ui/badge.tsx(25,18): error TS2339: Property 'className' does not exist on type 'BadgeProps'.
-src/components/ui/sheet.tsx(58,71): error TS2322: Type 'string' is not assignable to type '"bottom" | "top" | "left" | "right"'.
-src/components/ui/sidebar.tsx(453,49): error TS2322: Type 'string' is not assignable to type '"default" | "outline"'.
-src/components/ui/sidebar.tsx(453,58): error TS2322: Type 'string' is not assignable to type '"default" | "sm" | "lg"'.
-src/hooks/sheet (1).tsx(58,71): error TS2322: Type 'string' is not assignable to type '"bottom" | "top" | "left" | "right"'.

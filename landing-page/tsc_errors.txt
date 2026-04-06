@@ -1,9 +1,0 @@
-﻿../admin-page/AddPackage.tsx(3,5): error TS2875: This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
-../admin-page/AdminLayout.tsx(1,26): error TS2307: Cannot find module 'react' or its corresponding type declarations.
-../admin-page/AdminLayout.tsx(12,5): error TS2875: This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
-../admin-page/AdminSidebar.tsx(1,37): error TS2307: Cannot find module 'lucide-react' or its corresponding type declarations.
-../admin-page/AdminSidebar.tsx(17,5): error TS2875: This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
-../admin-page/ManagePackages.tsx(1,30): error TS2307: Cannot find module 'lucide-react' or its corresponding type declarations.
-../admin-page/ManagePackages.tsx(17,5): error TS2875: This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
-../admin-page/Overview.tsx(1,49): error TS2307: Cannot find module 'lucide-react' or its corresponding type declarations.
-../admin-page/Overview.tsx(5,5): error TS2875: This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
