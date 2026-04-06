@@ -1,0 +1,86 @@
+﻿[36mvite v5.4.21 [32mbuilding for production...[36m[39m
+transforming...
+[32mΓ£ô[39m 1086 modules transformed.
+node.exe : 
+[31mx[39m Build 
+failed in 3.35s
+At line:1 char:1
++ & "C:\Program Files\
+nodejs/node.exe" 
+"C:\Program 
+Files\nodejs/node_mo 
+...
++ ~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+~~~~~
+    + CategoryInfo    
+          : NotSpeci  
+  fied: ([31mx[39   
+ m Build failed in    
+ 3.35s:String) []    
+, RemoteException
+    + FullyQualifiedE 
+   rrorId : NativeCo  
+  mmandError
+ 
+[31merror during 
+build:
+[31m[vite:load-fallba
+ck] Could not load C:\
+Users\Admin\Downloads\
+Tanisha\FullStack\muhu
+rta-yatra-website\land
+ing-page\src/hooks/use
+-toast (imported by sr
+c/components/ui/toaste
+r.tsx): ENOENT: no 
+such file or 
+directory, open 'C:\Us
+ers\Admin\Downloads\Ta
+nisha\FullStack\muhurt
+a-yatra-website\landin
+g-page\src\hooks\use-t
+oast'[31m
+    at async open (nod
+e:internal/fs/promises
+:637:25)
+    at async 
+Object.readFile (node:
+internal/fs/promises:1
+269:14)
+    at async 
+Object.load (file:///C
+:/Users/Admin/Download
+s/Tanisha/FullStack/mu
+hurta-yatra-website/la
+nding-page/node_module
+s/vite/dist/node/chunk
+s/dep-BK3b2jBa.js:6535
+7:25)
+    at async PluginDri
+ver.hookFirstAndGetPlu
+gin (file:///C:/Users/
+Admin/Downloads/Tanish
+a/FullStack/muhurta-ya
+tra-website/landing-pa
+ge/node_modules/rollup
+/dist/es/shared/node-e
+ntry.js:22508:28)
+    at async file:///C
+:/Users/Admin/Download
+s/Tanisha/FullStack/mu
+hurta-yatra-website/la
+nding-page/node_module
+s/rollup/dist/es/share
+d/node-entry.js:21492:
+33
+    at async 
+Queue.work (file:///C:
+/Users/Admin/Downloads
+/Tanisha/FullStack/muh
+urta-yatra-website/lan
+ding-page/node_modules
+/rollup/dist/es/shared
+/node-entry.js:22736:3
+2)[39m
