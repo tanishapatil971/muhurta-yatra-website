@@ -6,7 +6,7 @@ import ScrollReveal from "@/components/ScrollReveal";
 import { CONTACT } from "@/config/contact";
 import { API_ENDPOINTS } from "@/config/api";
 import jsPDF from "jspdf";
-import "jspdf-autotable";
+import autoTable from "jspdf-autotable";
 
 interface PlaceInfo {
   _id: string;
@@ -96,7 +96,7 @@ export default function PlaceCategory() {
       ["Food Included", placeData.food, "", ""]
     ];
 
-    (doc as any).autoTable({
+    autoTable(doc, {
       startY: currentY,
       body: detailsBody,
       theme: 'grid',
@@ -112,7 +112,7 @@ export default function PlaceCategory() {
     currentY += 10;
     
     const highlightsBody = placeData.highlights.map(h => ["•", h]);
-    (doc as any).autoTable({
+    autoTable(doc, {
       startY: currentY,
       body: highlightsBody,
       theme: 'plain',
@@ -135,7 +135,7 @@ export default function PlaceCategory() {
       return ["*", day];
     });
 
-    (doc as any).autoTable({
+    autoTable(doc, {
       startY: currentY,
       body: itineraryBody,
       theme: 'striped',
