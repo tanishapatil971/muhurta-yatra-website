@@ -13,6 +13,10 @@ export default function Login() {
   
   // Get the redirect path from location state, or default to dashboard
   const from = location.state?.from?.pathname || "/dashboard";
+  
+  // Also check URL parameters for role-based explicit login requests
+  const searchParams = new URLSearchParams(location.search);
+  const requestedRole = searchParams.get("role");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,9 +27,23 @@ export default function Login() {
     setIsSubmitting(true);
 
     try {
-      await login(email, password);
-      // Redirect back to where the user was going, or to the dashboard
-      navigate(from, { replace: true });
+      const user = await login(email, password);
+      
+      // Determine redirect path based on role and request
+      let targetPath = from;
+      
+      if (user.role === "admin") {
+        targetPath = "/admin";
+      } else if (user.role === "user") {
+        targetPath = "/dashboard";
+      }
+
+      // If there was a specific role requested in URL but user has different role,
+      // we still send them to their valid role dashboard (already handled above).
+      // The explicit roleParam is mostly useful if you wanted to lock the form
+      // or pre-fill, but strictly for redirect, their actual user.role takes precedence.
+
+      navigate(targetPath, { replace: true });
     } catch (error) {
       console.error("Login component error:", error);
     } finally {

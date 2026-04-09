@@ -55,8 +55,12 @@ exports.getPackages = async (req, res) => {
 
     const packages = await Package.find().sort({ createdAt: -1 });
     
-    // If database is empty, we can also choose to return dummy data or an empty array.
-    // Based on user request, let's prioritize real data if DB is connected.
+    // If database is empty, return dummy data as fallback.
+    if (packages.length === 0) {
+      console.warn("⚠️  [DATABASE] Empty packages collection, returning dummy data as fallback.");
+      return res.status(200).json(DUMMY_PACKAGES);
+    }
+
     console.log(`✅ [DATABASE] Fetched ${packages.length} packages from MongoDB.`);
     res.status(200).json(packages);
   } catch (error) {
