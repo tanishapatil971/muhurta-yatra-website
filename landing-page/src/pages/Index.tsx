@@ -37,8 +37,8 @@ interface TravelPackage {
 }
 
 const heroSlides = [
-  { img: heroSinhagad, title: "Handcrafted Journeys Across India", sub: "Discover Spiritual, Adventure & Cultural Escapes from Pimpri" },
-  { img: heroPawna, title: "Serene Lakes & Hill Retreats", sub: "Escape to Nature's Finest Near Pune" },
+  { img: heroSinhagad, title: "Handcrafted Journeys Across India", sub: "Modern Travel Curation with a Traditional Heart" },
+  { img: heroPawna, title: "Serene Lakes & Hill Retreats", sub: "Escape to Nature's Finest Pursuits" },
   { img: heroRaigad, title: "Walk the Forts of Legends", sub: "Experience the Maratha Heritage Trail" },
 ];
 
@@ -50,10 +50,10 @@ const services = [
 ];
 
 const testimonials = [
-  { name: "Priya Kulkarni", text: "The Vaishno Devi yatra organized by Muhurta Yatra was life-changing. Every detail was perfectly managed.", location: "Pimpri" },
-  { name: "Rajesh Patil", text: "Our honeymoon to Goa was magical! Muhurta Yatra made it stress-free and unforgettable.", location: "Chinchwad" },
-  { name: "Sneha Deshmukh", text: "The Sinhagad trek with my family was amazing. Great guides, great food, great memories!", location: "Pune" },
-  { name: "Amit Joshi", text: "Best travel agency in PCMC. They planned our Konkan beach trip perfectly. Highly recommend!", location: "Nigdi" },
+  { name: "Priya Kulkarni", text: "The Vaishno Devi yatra organized by Muhurta Yatra was life-changing. Every detail was perfectly managed.", location: "Mumbai" },
+  { name: "Rajesh Patil", text: "Our honeymoon to Goa was magical! Muhurta Yatra made it stress-free and unforgettable.", location: "Thane" },
+  { name: "Sneha Deshmukh", text: "The Sinhagad trek with my family was amazing. Great guides, great food, great memories!", location: "Mumbai" },
+  { name: "Amit Joshi", text: "Best travel agency. They planned our Konkan beach trip perfectly. Highly recommend!", location: "Navi Mumbai" },
 ];
 
 // Removed static destinations in favor of dynamic backend packages
@@ -573,9 +573,9 @@ export default function Index() {
       <section className="py-16 bg-secondary">
         <div className="container-wide grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {[
-            { num: "1000+", label: "Happy Travelers" },
-            { num: "50+", label: "Destinations" },
-            { num: "15+", label: "Years Experience" },
+            { num: "250+", label: "Happy Travelers" },
+            { num: "20+", label: "Destinations" },
+            { num: "Est. 2025", label: "Young & Energetic" },
             { num: "100%", label: "Satisfaction" },
           ].map((s, i) => (
             <ScrollReveal key={i} delay={i * 100}>

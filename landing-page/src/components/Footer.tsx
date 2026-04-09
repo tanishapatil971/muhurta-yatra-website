@@ -38,7 +38,7 @@ export default function Footer() {
               <span className="font-heading text-xl font-bold">Muhurta Yatra</span>
             </div>
             <p className="text-background/70 text-sm leading-relaxed">
-              Handcrafted journeys across India – spiritual tours, honeymoon packages & cultural experiences from Pimpri-Chinchwad.
+              Handcrafted journeys across India – spiritual tours, honeymoon packages & cultural experiences.
             </p>
             <div className="flex gap-3 mt-4">
               {[Facebook, Instagram, Twitter, Youtube].map((Icon, i) => (
@@ -93,7 +93,7 @@ export default function Footer() {
             <ul className="space-y-3 text-sm">
               <li className="flex items-start gap-2 text-background/70">
                 <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-primary" />
-                Pimpri-Chinchwad, Pune, Maharashtra 411018
+                Mumbai, Maharashtra, India
               </li>
               <li className="flex items-center gap-2 text-background/70">
                 <Phone className="h-4 w-4 shrink-0 text-primary" />

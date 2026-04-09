@@ -115,7 +115,7 @@
 
 @layer components {
   .section-padding {
-    @apply px-4 sm:px-6 lg:px-8 py-16 md:py-24;
+    @apply px-4 sm:px-6 lg:px-8 py-12 md:py-24;
   }
   .container-wide {
     @apply max-w-7xl mx-auto;
@@ -132,12 +132,14 @@
   .hero-overlay {
     background: linear-gradient(180deg, hsla(20, 20%, 8%, 0.3) 0%, hsla(20, 20%, 8%, 0.7) 100%);
   }
-  .hover-lift {
-    @apply transition-all duration-300;
-  }
   .hover-lift:hover {
     transform: translateY(-6px);
     box-shadow: var(--shadow-elevated);
+  }
+
+  /* Fixed interactive elements z-index */
+  .floating-contact {
+    @apply z-40;
   }
 }
 

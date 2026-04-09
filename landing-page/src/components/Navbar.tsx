@@ -27,7 +27,10 @@ export default function Navbar() {
   const location = useLocation();
   const navigate = useNavigate();
   const { theme, toggleTheme } = useTheme();
-  const isHeroRoute = ["/", "/about", "/places", "/faqs"].includes(location.pathname);
+  
+  // Hero routes logic: checks if the current path starts with specific prefixes
+  const isHeroRoute = ["/", "/about", "/places", "/faqs", "/booking"].some(path => location.pathname === path || location.pathname.startsWith("/places/"));
+  
   const transparentAtTop = isHeroRoute && !scrolled && !mobileOpen;
 
   useEffect(() => {
@@ -145,7 +148,7 @@ export default function Navbar() {
                   {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                   {theme === "dark" ? "Light Mode" : "Dark Mode"}
                 </button>
-                <Button variant="hero" onClick={() => { navigate("/login"); setMobileOpen(false); }}>
+                <Button variant="hero" className="w-full mt-2" onClick={() => { navigate("/login"); setMobileOpen(false); }}>
                   Login
                 </Button>
               </div>

@@ -1,21 +1,37 @@
-import { Award, Users, MapPin, TrendingUp, Heart, Globe } from "lucide-react";
+import { Award, Users, MapPin, TrendingUp, Heart, Globe, ShieldCheck, Zap, Sparkles, Eye } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 import heroRaigad from "@/assets/hero-raigad.jpg";
-
-const timeline = [
-  { year: "2010", title: "Founded in Pune", desc: "Started as a small travel desk in Pimpri-Chinchwad with a vision to make travel accessible.", icon: MapPin },
-  { year: "2015", title: "First Spiritual Yatra", desc: "Organized our first large-scale Vaishno Devi pilgrimage with 200+ devotees.", icon: Heart },
-  { year: "2018", title: "Fort Trek Series", desc: "Launched weekend fort trek packages covering 20+ Sahyadri forts.", icon: TrendingUp },
-  { year: "2020", title: "Honeymoon Packages", desc: "Expanded into curated honeymoon experiences across India.", icon: Heart },
-  { year: "2023", title: "1000+ Happy Travelers", desc: "Crossed the milestone of 1000 satisfied travelers and growing.", icon: Users },
-  { year: "2026", title: "Local Pimpri Tours", desc: "Launched hyperlocal heritage walks and weekend escapes from PCMC.", icon: Globe },
-];
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const stats = [
-  { value: "1000+", label: "Happy Travelers", icon: Users },
-  { value: "50+", label: "Destinations", icon: MapPin },
-  { value: "15+", label: "Years of Trust", icon: Award },
+  { value: "250+", label: "Happy Travelers", icon: Users },
+  { value: "20+", label: "Destinations", icon: MapPin },
+  { value: "1st Year", label: "of Excellence", icon: Award },
   { value: "100%", label: "Handcrafted", icon: Heart },
+];
+
+const whyChooseUs = [
+  {
+    title: "The 'Muhurta' Concept",
+    desc: "We don't just pick dates; we find the perfect window (Muhurta) for your trip, considering weather, local festivals, and crowd patterns.",
+    icon: Sparkles
+  },
+  {
+    title: "Personalized Curation",
+    desc: "Every traveler is unique. We move away from generic mass-produced packages to create itineraries that reflect your style and pace.",
+    icon: Zap
+  },
+  {
+    title: "Authentic Local Depth",
+    desc: "Born and raised in Mumbai, our team explores every spot personally before recommending it. We know the secrets Google doesn't.",
+    icon: Eye
+  },
+  {
+    title: "Safety & Transparency",
+    desc: "Clear pricing, verified transport, and 24/7 support. We manage the details so you can focus entirely on the experience.",
+    icon: ShieldCheck
+  }
 ];
 
 export default function About() {
@@ -26,59 +42,66 @@ export default function About() {
         <img src={heroRaigad} alt="About Muhurta Yatra" className="w-full h-full object-cover" />
         <div className="hero-overlay absolute inset-0" />
         <div className="absolute inset-0 flex items-center justify-center text-center px-4">
-          <div>
-            <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-3">Our Story</h1>
-            <p className="text-primary-foreground/80 text-lg max-w-xl mx-auto">
-              From a small desk in Pimpri to crafting 1000+ journeys across India.
+          <div className="animate-fade-up">
+            <span className="text-primary-foreground/70 font-semibold text-sm tracking-[0.3em] uppercase mb-4 block">Est. 2025</span>
+            <h1 className="font-heading text-4xl md:text-5xl lg:text-7xl font-bold text-primary-foreground mb-4">
+              Our New Chapter
+            </h1>
+            <p className="text-primary-foreground/80 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed">
+              We are a young team of enthusiasts on a mission to redefine how India travels.
             </p>
           </div>
         </div>
       </section>
 
       {/* Mission */}
-      <section className="section-padding bg-background">
-        <div className="container-wide max-w-3xl text-center">
-          <ScrollReveal>
-            <span className="text-primary font-semibold text-sm tracking-widest uppercase">Our Mission</span>
-            <h2 className="font-heading text-3xl md:text-4xl font-bold mt-2 text-foreground mb-6">
-              Making Travel a Spiritual & Cultural Experience
-            </h2>
-            <p className="text-muted-foreground text-lg leading-relaxed">
-              At Muhurta Yatra, we believe every journey should be more than just a trip — it should be a transformation. 
-              We handcraft each yatra with deep knowledge of Maharashtra's hidden gems, spiritual sites, and cultural treasures. 
-              Based in Pimpri-Chinchwad, we combine local expertise with heartfelt hospitality to create unforgettable experiences.
-            </p>
-          </ScrollReveal>
+      <section className="section-padding bg-background relative overflow-hidden">
+        {/* Subtle background element */}
+        <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/5 rounded-full blur-3xl" />
+        
+        <div className="container-wide max-w-4xl">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <ScrollReveal>
+              <div className="relative">
+                <span className="text-primary font-semibold text-sm tracking-widest uppercase">The Vision</span>
+                <h2 className="font-heading text-3xl md:text-4xl font-bold mt-2 text-foreground mb-6">
+                  Fresh Perspective, <br />Deep Roots.
+                </h2>
+                <div className="w-16 h-1 bg-primary mb-8" />
+              </div>
+            </ScrollReveal>
+            
+            <ScrollReveal delay={200}>
+              <p className="text-muted-foreground text-lg leading-relaxed mb-6">
+                Muhurta Yatra was born last year from a simple observation: travel has become too transactional. We wanted to bring back the "Soul" in local exploration.
+              </p>
+              <p className="text-muted-foreground text-lg leading-relaxed">
+                As a young startup, we aren't bound by old ways of operating. We leverage modern planning with a traditional heart to ensure your journey is perfectly timed and deeply personal.
+              </p>
+            </ScrollReveal>
+          </div>
         </div>
       </section>
 
-      {/* Timeline */}
-      <section className="section-padding bg-muted/50">
+      {/* Why Choose Us */}
+      <section className="section-padding bg-muted/30">
         <div className="container-wide">
           <ScrollReveal>
-            <div className="text-center mb-16">
-              <span className="text-primary font-semibold text-sm tracking-widest uppercase">Our Journey</span>
-              <h2 className="font-heading text-3xl md:text-4xl font-bold mt-2 text-foreground">A Legacy of Exploration</h2>
+            <div className="text-center mb-16 px-4">
+              <span className="text-primary font-semibold text-sm tracking-widest uppercase">The Difference</span>
+              <h2 className="font-heading text-3xl md:text-4xl font-bold mt-2 text-foreground">Why Muhurta Yatra?</h2>
             </div>
           </ScrollReveal>
 
-          <div className="relative max-w-3xl mx-auto">
-            {/* Vertical line */}
-            <div className="absolute left-6 md:left-1/2 top-0 bottom-0 w-0.5 bg-border md:-translate-x-0.5" />
-
-            {timeline.map((item, i) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {whyChooseUs.map((item, i) => (
               <ScrollReveal key={i} delay={i * 100}>
-                <div className={`relative flex items-start gap-6 mb-12 ${i % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}`}>
-                  {/* Icon dot */}
-                  <div className="absolute left-6 md:left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-primary flex items-center justify-center z-10 shrink-0 shadow-lg">
-                    <item.icon className="h-5 w-5 text-primary-foreground" />
+                <div className="bg-background border border-border/50 p-8 rounded-2xl hover-lift h-full transition-all hover:border-primary/20">
+                  <div className="w-14 h-14 rounded-xl bg-primary/5 flex items-center justify-center mb-6">
+                    <item.icon className="h-7 w-7 text-primary" />
                   </div>
-                  {/* Content */}
-                  <div className={`ml-20 md:ml-0 md:w-[calc(50%-2rem)] ${i % 2 === 0 ? "md:pr-8 md:text-right" : "md:pl-8"}`}>
-                    <span className="text-primary font-bold text-lg">{item.year}</span>
-                    <h3 className="font-heading text-xl font-semibold text-foreground mt-1">{item.title}</h3>
-                    <p className="text-muted-foreground text-sm mt-2 leading-relaxed">{item.desc}</p>
-                  </div>
+                  <h3 className="font-heading text-xl font-bold text-foreground mb-3">{item.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
                 </div>
               </ScrollReveal>
             ))}
@@ -87,14 +110,19 @@ export default function About() {
       </section>
 
       {/* Stats */}
-      <section className="py-16 bg-primary">
-        <div className="container-wide grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+      <section className="py-20 bg-primary relative overflow-hidden">
+        {/* Background texture icon */}
+        <Globe className="absolute -bottom-10 -left-10 h-64 w-64 text-white/5 rotate-12" />
+        
+        <div className="container-wide relative z-10 grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
           {stats.map((s, i) => (
             <ScrollReveal key={i} delay={i * 100}>
               <div className="flex flex-col items-center">
-                <s.icon className="h-8 w-8 text-primary-foreground/70 mb-2" />
-                <div className="font-heading text-3xl md:text-4xl font-bold text-primary-foreground">{s.value}</div>
-                <div className="text-primary-foreground/70 text-sm mt-1">{s.label}</div>
+                <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center mb-4">
+                  <s.icon className="h-6 w-6 text-white" />
+                </div>
+                <div className="font-heading text-4xl md:text-5xl font-bold text-white mb-2">{s.value}</div>
+                <div className="text-white/70 text-sm font-medium tracking-wider uppercase">{s.label}</div>
               </div>
             </ScrollReveal>
           ))}
@@ -105,30 +133,60 @@ export default function About() {
       <section className="section-padding bg-background">
         <div className="container-wide">
           <ScrollReveal>
-            <div className="text-center mb-12">
-              <span className="text-primary font-semibold text-sm tracking-widest uppercase">Our Team</span>
-              <h2 className="font-heading text-3xl md:text-4xl font-bold mt-2 text-foreground">The People Behind Your Yatra</h2>
+            <div className="text-center mb-16">
+              <span className="text-primary font-semibold text-sm tracking-widest uppercase">The Team</span>
+              <h2 className="font-heading text-3xl md:text-4xl font-bold mt-2 text-foreground">Guided by Passion</h2>
+              <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
+                We are a small, dedicated group of explorers who believe in the power of meaningful travel.
+              </p>
             </div>
           </ScrollReveal>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl mx-auto">
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
             {[
-              { name: "Rohit Sharma", role: "Founder & CEO", desc: "A passionate traveler who turned his love for Maharashtra into a business." },
-              { name: "Anjali Deshmukh", role: "Head of Operations", desc: "Ensures every yatra runs smoothly with meticulous planning." },
-              { name: "Vikram Patil", role: "Trek Leader", desc: "Certified mountaineer with 10+ years of Sahyadri trekking experience." },
+              { name: "Rohit Sharma", role: "Co-Founder", desc: "Digital nomad and history buff who envisioned a more personal way to see India." },
+              { name: "Anjali Deshmukh", role: "Head of Curation", desc: "Expert on regional cuisines and spiritual history of the Sahyadri range." },
+              { name: "Vikram Patil Pat", role: "Logistics Lead", desc: "Ensures safety and comfort are never compromised, no matter how remote the trail." },
             ].map((member, i) => (
               <ScrollReveal key={i} delay={i * 100}>
-                <div className="glass-card p-6 text-center hover-lift">
-                  <div className="w-20 h-20 rounded-full bg-primary/10 mx-auto mb-4 flex items-center justify-center">
-                    <span className="font-heading text-2xl font-bold text-primary">
+                <div className="group glass-card p-8 text-center hover-lift relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+                  
+                  <div className="w-24 h-24 rounded-full bg-primary/5 mx-auto mb-6 flex items-center justify-center ring-1 ring-primary/10 group-hover:bg-primary group-hover:ring-primary transition-all duration-300">
+                    <span className="font-heading text-3xl font-bold text-primary group-hover:text-white transition-colors">
                       {member.name.split(" ").map((n) => n[0]).join("")}
                     </span>
                   </div>
-                  <h3 className="font-heading text-lg font-semibold text-foreground">{member.name}</h3>
-                  <p className="text-primary text-sm font-medium">{member.role}</p>
-                  <p className="text-muted-foreground text-sm mt-2">{member.desc}</p>
+                  
+                  <h3 className="font-heading text-xl font-bold text-foreground mb-1">{member.name}</h3>
+                  <p className="text-primary text-sm font-bold tracking-widest uppercase mb-4">{member.role}</p>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{member.desc}</p>
                 </div>
               </ScrollReveal>
             ))}
+          </div>
+        </div>
+      </section>
+      
+      {/* Ready to start? */}
+      <section className="section-padding pt-0 pb-24">
+        <div className="container-wide">
+          <div className="bg-secondary rounded-3xl p-12 text-center text-white relative overflow-hidden">
+            <div className="absolute inset-0 bg-primary/10" />
+            <ScrollReveal>
+              <h2 className="font-heading text-3xl md:text-4xl font-bold mb-6 relative z-10">Start Your Story With Us</h2>
+              <p className="text-white/70 max-w-xl mx-auto mb-10 relative z-10">
+                You don't need a legacy to find a great adventure. You just need a partner who cares about the journey as much as you do.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4 relative z-10">
+                <Button variant="hero" size="lg" asChild>
+                  <Link to="/places">Explore Places</Link>
+                </Button>
+                <Button variant="outline" className="text-white hover:text-secondary border-white/20" size="lg" asChild>
+                  <Link to="/booking">Book a Call</Link>
+                </Button>
+              </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
