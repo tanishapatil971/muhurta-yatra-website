@@ -8,6 +8,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || "";
 export const API_ENDPOINTS = {
   enquiries: `${API_BASE_URL}/api/enquiries`,
   packages: `${API_BASE_URL}/api/packages`,
+  places: `${API_BASE_URL}/api/places`,
   auth: {
     login: `${API_BASE_URL}/api/auth/login`,
     register: `${API_BASE_URL}/api/auth/register`,

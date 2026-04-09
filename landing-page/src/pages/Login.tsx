@@ -11,41 +11,33 @@ export default function Login() {
   const location = useLocation();
   const { login } = useAuth();
   
-  // Get the redirect path from location state, or default to dashboard
-  const from = location.state?.from?.pathname || "/dashboard";
   
   // Also check URL parameters for role-based explicit login requests
   const searchParams = new URLSearchParams(location.search);
-  const requestedRole = searchParams.get("role");
+  const requestedRole = searchParams.get("role"); // 'admin' or null
+  const isAdminLogin = requestedRole === "admin";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+    setError("");
 
     try {
       const user = await login(email, password);
-      
-      // Determine redirect path based on role and request
-      let targetPath = from;
-      
+
+      // Redirect based on actual role from backend
       if (user.role === "admin") {
-        targetPath = "/admin";
-      } else if (user.role === "user") {
-        targetPath = "/dashboard";
+        navigate("/admin", { replace: true });
+      } else {
+        navigate("/dashboard", { replace: true });
       }
-
-      // If there was a specific role requested in URL but user has different role,
-      // we still send them to their valid role dashboard (already handled above).
-      // The explicit roleParam is mostly useful if you wanted to lock the form
-      // or pre-fill, but strictly for redirect, their actual user.role takes precedence.
-
-      navigate(targetPath, { replace: true });
-    } catch (error) {
-      console.error("Login component error:", error);
+    } catch (err: any) {
+      setError(err.message || "Invalid email or password. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -55,11 +47,18 @@ export default function Login() {
     <div className="min-h-[80vh] flex items-center justify-center bg-muted/50 px-4 pt-24 pb-12">
       <div className="glass-card w-full max-w-md p-8 animate-fade-up">
         <div className="text-center mb-10">
+          {isAdminLogin && (
+            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary text-xs font-semibold px-3 py-1.5 rounded-full mb-4 uppercase tracking-widest">
+              🔐 Admin Access
+            </div>
+          )}
           <h1 className="font-heading text-3xl font-bold text-foreground">
-            Welcome Back
+            {isAdminLogin ? "Admin Login" : "Welcome Back"}
           </h1>
           <p className="text-muted-foreground mt-2">
-            Sign in to access your dashboard and bookings
+            {isAdminLogin
+              ? "Sign in to access the admin dashboard"
+              : "Sign in to access your bookings and dashboard"}
           </p>
         </div>
 
@@ -99,6 +98,11 @@ export default function Login() {
               "Sign In"
             )}
           </Button>
+          {error && (
+            <div className="mt-3 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-3">
+              {error}
+            </div>
+          )}
         </form>
 
         <div className="mt-6 text-center text-sm text-muted-foreground">

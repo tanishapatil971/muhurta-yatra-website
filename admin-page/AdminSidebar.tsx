@@ -1,4 +1,4 @@
-import { Package, Plus, MessageSquare } from "lucide-react";
+import { Package, Plus, MessageSquare, Map } from "lucide-react";
 
 interface AdminSidebarProps {
   activeTab: string;
@@ -8,6 +8,7 @@ interface AdminSidebarProps {
 export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarProps) {
   const menuItems = [
     { id: "manage-packages", label: "Manage Packages", icon: Package },
+    { id: "manage-places", label: "Manage Places", icon: Map },
     { id: "add-package", label: "Add Package", icon: Plus },
     { id: "enquiries", label: "Enquiries", icon: MessageSquare },
   ];

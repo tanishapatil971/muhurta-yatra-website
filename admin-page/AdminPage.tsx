@@ -3,6 +3,7 @@ import AdminSidebar from "./AdminSidebar";
 import AddPackage from "./AddPackage";
 import ManagePackages from "./ManagePackages";
 import EnquiriesPage from "./EnquiriesPage";
+import ManagePlaces from "./ManagePlaces";
 import { API_ENDPOINTS } from "../landing-page/src/config/api";
 
 // 🏆 Define strict types to prevent runtime errors
@@ -20,7 +21,7 @@ export interface TravelPackage {
   transport?: string;
 }
 
-export type AdminTab = "manage-packages" | "add-package" | "enquiries";
+export type AdminTab = "manage-packages" | "add-package" | "enquiries" | "manage-places";
 
 export default function AdminPage() {
   console.log("TRACING: Rendering AdminPage");
@@ -111,6 +112,10 @@ export default function AdminPage() {
 
           {activeTab === "enquiries" && (
             <EnquiriesPage />
+          )}
+
+          {activeTab === "manage-places" && (
+            <ManagePlaces />
           )}
         </div>
       </main>

@@ -92,21 +92,14 @@ export default function Navbar() {
             {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
           </button>
 
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="hero" size="lg" className="ml-4">
-                Login
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => navigate("/login?role=admin")}>
-                Login as Admin
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate("/login?role=traveller")}>
-                Login as Traveller
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button
+            variant="hero"
+            size="lg"
+            className="ml-4"
+            onClick={() => navigate("/login")}
+          >
+            Login
+          </Button>
         </div>
 
         {/* Mobile toggle */}
@@ -152,11 +145,8 @@ export default function Navbar() {
                   {theme === "dark" ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
                   {theme === "dark" ? "Light Mode" : "Dark Mode"}
                 </button>
-                <Button variant="heroOutline" onClick={() => { navigate("/login?role=admin"); setMobileOpen(false); }}>
-                  Login as Admin
-                </Button>
-                <Button variant="hero" onClick={() => { navigate("/login?role=traveller"); setMobileOpen(false); }}>
-                  Login as Traveller
+                <Button variant="hero" onClick={() => { navigate("/login"); setMobileOpen(false); }}>
+                  Login
                 </Button>
               </div>
             </div>

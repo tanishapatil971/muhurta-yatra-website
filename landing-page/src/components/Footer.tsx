@@ -123,7 +123,12 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-background/10 py-4 px-4">
         <div className="container-wide flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-background/50">
-          <p>© {new Date().getFullYear()} Muhurta Yatra. All rights reserved.</p>
+          <div className="flex items-center gap-4">
+            <p>© {new Date().getFullYear()} Muhurta Yatra. All rights reserved.</p>
+            <Link to="/login?role=admin" className="hover:text-primary transition-colors hover:underline">
+              Admin Portal
+            </Link>
+          </div>
           <button onClick={scrollToTop} className="p-2 rounded-full bg-primary hover:bg-primary/80 text-primary-foreground transition-colors" aria-label="Back to top">
             <ArrowUp className="h-4 w-4" />
           </button>

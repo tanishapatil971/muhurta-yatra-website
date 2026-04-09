@@ -6,6 +6,7 @@ const enquiryRoutes = require('./routes/enquiryRoutes');
 const authRoutes = require('./routes/authRoutes');
 const packageRoutes = require('./routes/packageRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
+const placeRoutes = require('./routes/placeRoutes');
 
 dotenv.config();
 
@@ -45,6 +46,7 @@ app.use('/api/enquiries', enquiryRoutes);
 app.use('/api/auth', dbCheck, authRoutes); // Auth routes now have strict DB dependency
 app.use('/api/packages', packageRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/places', placeRoutes);
 
 // 🔍 Health Check
 app.get('/api/health', (req, res) => {
