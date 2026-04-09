@@ -63,90 +63,207 @@ export default function PlaceCategory() {
 
   const generatePDF = (placeData: PlaceInfo) => {
     const doc = new jsPDF();
-    
-    // Header
-    doc.setFillColor(30, 64, 175); // Brand Blue
-    doc.rect(0, 0, 210, 30, 'F');
-    doc.setTextColor(255, 255, 255);
+    const pageW = 210;
+    const gold = [212, 175, 55] as [number, number, number];
+    const navy = [15, 30, 80] as [number, number, number];
+    const darkGray = [45, 45, 60] as [number, number, number];
+    const lightGray = [248, 248, 252] as [number, number, number];
+    const white = [255, 255, 255] as [number, number, number];
+
+    // ── COVER HEADER ──────────────────────────────────────────────
+    doc.setFillColor(...navy);
+    doc.rect(0, 0, pageW, 55, 'F');
+
+    // Gold accent bar
+    doc.setFillColor(...gold);
+    doc.rect(0, 52, pageW, 3, 'F');
+
+    // Brand name
+    doc.setTextColor(...gold);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setCharSpace(3);
+    doc.text("MUHURTA YATRA", 15, 16);
+    doc.setCharSpace(0);
+
+    // Tagline
+    doc.setTextColor(200, 210, 240);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.text("HANDCRAFTED JOURNEYS ACROSS INDIA", 15, 22);
+
+    // Destination name (large)
+    doc.setTextColor(...white);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(22);
-    doc.text("Muhurta Yatra", 15, 20);
-    
-    // Title
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(18);
-    doc.text(`Official Itinerary: ${placeData.name}`, 15, 45);
-    
-    doc.setFont("helvetica", "normal");
-    doc.setFontSize(12);
-    const splitDesc = doc.splitTextToSize(placeData.desc, 180);
-    doc.text(splitDesc, 15, 55);
+    doc.text(placeData.name, 15, 42);
 
-    // Details Grid
-    let currentY = 60 + (splitDesc.length * 6);
-    
-    doc.setFont("helvetica", "bold");
-    doc.text("Trip Details", 15, currentY);
-    currentY += 10;
-    
-    const detailsBody = [
-      ["Best Time", placeData.bestTime, "Distance", placeData.distance],
-      ["Departure", placeData.departureInfo, "Transport", placeData.travelDetails],
-      ["Max Capacity", `${placeData.maxCapacity} People`, "Price / Person", `Rs. ${placeData.pricePerPerson}`],
-      ["Food Included", placeData.food, "", ""]
+    // Document label (top right)
+    doc.setTextColor(...gold);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.text("SAMPLE ITINERARY", pageW - 15, 16, { align: "right" });
+    doc.setTextColor(180, 190, 220);
+    doc.setFontSize(7);
+    doc.text(new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }), pageW - 15, 22, { align: "right" });
+
+    let y = 66;
+
+    // ── DESCRIPTION ───────────────────────────────────────────────
+    doc.setTextColor(...darkGray);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(10);
+    const desc = doc.splitTextToSize(placeData.desc, pageW - 30);
+    doc.text(desc, 15, y);
+    y += desc.length * 5.5 + 8;
+
+    // ── QUICK STATS ────────────────────────────────────────────────
+    const stats = [
+      { label: "PRICE / PERSON", value: `₹${placeData.pricePerPerson.toLocaleString()}` },
+      { label: "MAX CAPACITY", value: `${placeData.maxCapacity} Guests` },
+      { label: "BEST TIME", value: placeData.bestTime },
+    ];
+    const cardW = (pageW - 30 - 8) / 3;
+    stats.forEach((s, i) => {
+      const x = 15 + i * (cardW + 4);
+      doc.setFillColor(...lightGray);
+      doc.roundedRect(x, y, cardW, 20, 2, 2, 'F');
+      doc.setDrawColor(...gold);
+      doc.setLineWidth(0.5);
+      doc.roundedRect(x, y, cardW, 20, 2, 2, 'S');
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(7);
+      doc.setTextColor(...gold);
+      doc.text(s.label, x + cardW / 2, y + 8, { align: "center" });
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(10);
+      doc.setTextColor(...navy);
+      doc.text(s.value, x + cardW / 2, y + 16, { align: "center" });
+    });
+    y += 28;
+
+    // ── SECTION HELPER ─────────────────────────────────────────────
+    const sectionHeader = (title: string) => {
+      doc.setFillColor(...navy);
+      doc.rect(15, y, 3, 8, 'F');
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(11);
+      doc.setTextColor(...navy);
+      doc.text(title, 22, y + 6);
+      doc.setDrawColor(220, 220, 235);
+      doc.setLineWidth(0.3);
+      doc.line(15, y + 10, pageW - 15, y + 10);
+      y += 15;
+    };
+
+    // ── TRIP LOGISTICS ─────────────────────────────────────────────
+    sectionHeader("TRIP LOGISTICS");
+    const logistics = [
+      ["🚌  Transport", placeData.travelDetails],
+      ["🍽️  Food", placeData.food],
+      ["📍  Departure", placeData.departureInfo],
     ];
 
-    autoTable(doc, {
-      startY: currentY,
-      body: detailsBody,
-      theme: 'grid',
-      headStyles: { fillColor: [240, 240, 240] },
-      styles: { fontSize: 10, cellPadding: 4 }
+    logistics.forEach(([label, value]) => {
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9);
+      doc.setTextColor(...darkGray);
+      doc.text(label, 18, y);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(100, 100, 120);
+      const valLines = doc.splitTextToSize(value, pageW - 80);
+      doc.text(valLines, 75, y);
+      y += Math.max(valLines.length * 5.5, 7) + 2;
     });
+    y += 3;
 
-    currentY = (doc as any).lastAutoTable.finalY + 15;
-
-    // Highlights
-    doc.setFont("helvetica", "bold");
-    doc.text("Key Highlights", 15, currentY);
-    currentY += 10;
-    
-    const highlightsBody = placeData.highlights.map(h => ["•", h]);
-    autoTable(doc, {
-      startY: currentY,
-      body: highlightsBody,
-      theme: 'plain',
-      styles: { fontSize: 10, cellPadding: 2 },
-      columnStyles: { 0: { cellWidth: 10 } }
+    // ── HIGHLIGHTS ─────────────────────────────────────────────────
+    sectionHeader("HIGHLIGHTS");
+    const cols = 2;
+    const colW = (pageW - 30) / cols;
+    placeData.highlights.forEach((h, i) => {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+      const hx = 15 + col * colW;
+      const hy = y + row * 10;
+      doc.setFillColor(...gold);
+      doc.circle(hx + 3, hy - 1.5, 1.5, 'F');
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9.5);
+      doc.setTextColor(...darkGray);
+      doc.text(h, hx + 8, hy);
     });
+    y += Math.ceil(placeData.highlights.length / cols) * 10 + 5;
 
-    currentY = (doc as any).lastAutoTable.finalY + 15;
+    // ── ITINERARY ──────────────────────────────────────────────────
+    sectionHeader("DAY-WISE ITINERARY");
 
-    // Day-wise Itinerary
-    doc.setFont("helvetica", "bold");
-    doc.text("Day-wise Plan", 15, currentY);
-    currentY += 10;
-
-    const itineraryBody = placeData.itinerary.map(day => {
+    placeData.itinerary.forEach((day, i) => {
       const parts = day.split(':');
-      if (parts.length > 1) {
-        return [parts[0].trim(), parts.slice(1).join(':').trim()];
+      const dayLabel = parts.length > 1 ? parts[0].trim() : `Day ${i + 1}`;
+      const dayDesc = parts.length > 1 ? parts.slice(1).join(':').trim() : day;
+
+      // Check page space
+      if (y > 265) {
+        doc.addPage();
+        y = 20;
       }
-      return ["*", day];
+
+      // Day circle + label
+      doc.setFillColor(...navy);
+      doc.circle(20, y + 3, 5, 'F');
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(7);
+      doc.setTextColor(...white);
+      doc.text(`${i + 1}`, 20, y + 5, { align: "center" });
+
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9.5);
+      doc.setTextColor(...navy);
+      doc.text(dayLabel, 30, y + 3);
+
+      const descLines = doc.splitTextToSize(dayDesc, pageW - 45);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(9);
+      doc.setTextColor(100, 110, 130);
+      doc.text(descLines, 30, y + 9);
+
+      // Connector line
+      if (i < placeData.itinerary.length - 1) {
+        doc.setDrawColor(200, 210, 220);
+        doc.setLineWidth(0.4);
+        doc.setLineDashPattern([1, 1], 0);
+        doc.line(20, y + 8, 20, y + 9 + descLines.length * 5.5 + 4);
+        doc.setLineDashPattern([], 0);
+      }
+
+      y += 9 + descLines.length * 5.5 + 6;
     });
 
-    autoTable(doc, {
-      startY: currentY,
-      body: itineraryBody,
-      theme: 'striped',
-      head: [["Day", "Schedule"]],
-      headStyles: { fillColor: [30, 64, 175], textColor: 255 },
-      styles: { fontSize: 10, cellPadding: 5 },
-      columnStyles: { 0: { cellWidth: 30, fontStyle: 'bold' } }
-    });
-    
-    // Save
-    doc.save(`${placeData.name.replace(/\s+/g, '_')}_Itinerary.pdf`);
+    // ── FOOTER ─────────────────────────────────────────────────────
+    if (y > 260) { doc.addPage(); y = 20; }
+    y = Math.max(y + 6, 265);
+    doc.setFillColor(...navy);
+    doc.rect(0, y, pageW, 32, 'F');
+    doc.setFillColor(...gold);
+    doc.rect(0, y, pageW, 1.5, 'F');
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(...gold);
+    doc.text("Muhurta Yatra", 15, y + 10);
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(190, 200, 225);
+    doc.text("info@muhurtayatra.com  |  Handcrafted Journeys Across India", 15, y + 18);
+    doc.setFontSize(7);
+    doc.setTextColor(140, 155, 190);
+    doc.text("This is a sample itinerary. Prices and schedules are subject to change.", 15, y + 26);
+
+    doc.save(`${placeData.name.replace(/\s+/g, '_')}_Muhurta_Yatra_Itinerary.pdf`);
   };
 
   // Determine title from URL param for breadcrumb mapping

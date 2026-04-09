@@ -104,18 +104,6 @@ export default function Footer() {
                 <a href="mailto:info@muhurtayatra.com" className="hover:text-primary transition-colors">info@muhurtayatra.com</a>
               </li>
             </ul>
-            <div className="mt-4 rounded-lg overflow-hidden">
-              <iframe
-                title="Muhurta Yatra Office Location"
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d60530.18799573845!2d73.7757778!3d18.6279395!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2b9f4039a5657%3A0x474519cee8f2ee52!2sPimpri-Chinchwad%2C%20Maharashtra!5e0!3m2!1sen!2sin!4v1700000000000"
-                width="100%"
-                height="180"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-            </div>
           </div>
         </div>
       </div>
