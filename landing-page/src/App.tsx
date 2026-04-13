@@ -81,6 +81,14 @@ function GlobalErrorBoundary({ children }: { children: ReactNode }) {
   return <>{children}</>;
 }
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
+
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function AppContent() {
@@ -137,6 +145,7 @@ export default function App() {
             <Sonner />
             <BrowserRouter>
               <ThemeProvider>
+                <ScrollToTop />
                 <AppContent />
               </ThemeProvider>
             </BrowserRouter>

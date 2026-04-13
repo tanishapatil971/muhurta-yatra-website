@@ -8,19 +8,19 @@ interface Enquiry {
   phone: string;
   email?: string;
   message?: string;
-  status: "new" | "contacted" | "converted";
+  status: "pending" | "contacted" | "closed";
   createdAt: string;
 }
 
 type EnquiryStatus = Enquiry["status"];
 type FilterStatus = "all" | EnquiryStatus;
 
-const STATUS_OPTIONS: EnquiryStatus[] = ["new", "contacted", "converted"];
+const STATUS_OPTIONS: EnquiryStatus[] = ["pending", "contacted", "closed"];
 
 const STATUS_STYLES: Record<EnquiryStatus, string> = {
-  new: "bg-blue-50 text-blue-700 border-blue-200 ring-blue-500/20",
-  contacted: "bg-amber-50 text-amber-700 border-amber-200 ring-amber-500/20",
-  converted: "bg-emerald-50 text-emerald-700 border-emerald-200 ring-emerald-500/20",
+  pending: "bg-amber-50 text-amber-700 border-amber-200 ring-amber-500/20",
+  contacted: "bg-blue-50 text-blue-700 border-blue-200 ring-blue-500/20",
+  closed: "bg-emerald-50 text-emerald-700 border-emerald-200 ring-emerald-500/20",
 };
 
 // Fallback dummy data if backend is disconnected or auth fails
@@ -31,7 +31,7 @@ const DUMMY_ENQUIRIES: Enquiry[] = [
     phone: "+91 9876543210",
     email: "aarav.sharma@example.com",
     message: "I am looking for a 3-night package to Mahabaleshwar next week for my family.",
-    status: "new",
+    status: "pending",
     createdAt: new Date().toISOString(),
   },
   {
@@ -47,7 +47,7 @@ const DUMMY_ENQUIRIES: Enquiry[] = [
     phone: "+91 7654321098",
     email: "rohan.d@example.com",
     message: "Booking confirmed! Please send the itinerary details to my email.",
-    status: "converted",
+    status: "closed",
     createdAt: new Date(Date.now() - 172800000).toISOString(),
   }
 ];
@@ -72,7 +72,7 @@ export default function EnquiriesPage() {
       const res = await fetch(API_ENDPOINTS.enquiries, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token") || ""}`
+          Authorization: `Bearer ${localStorage.getItem("auth_token") || ""}`
         }
       });
       if (!res.ok) {
@@ -111,7 +111,7 @@ export default function EnquiriesPage() {
         method: "PATCH",
         headers: { 
           "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token") || ""}`
+          Authorization: `Bearer ${localStorage.getItem("auth_token") || ""}`
         },
         body: JSON.stringify({ status: newStatus }),
       });
@@ -146,10 +146,16 @@ export default function EnquiriesPage() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm font-medium text-muted-foreground animate-pulse">Loading enquiries...</p>
+      <div className="space-y-6">
+        <div className="h-10 w-48 bg-gray-200 animate-pulse rounded-full" />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="h-12 bg-gray-100 animate-pulse rounded-xl" />
+          <div className="h-12 bg-gray-100 animate-pulse rounded-xl" />
+        </div>
+        <div className="space-y-4">
+          {[1, 2, 3].map(i => (
+            <div key={i} className="h-32 bg-gray-50 animate-pulse rounded-2xl" />
+          ))}
         </div>
       </div>
     );
@@ -160,42 +166,22 @@ export default function EnquiriesPage() {
       {/* Header Area */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-heading font-bold text-gray-900 tracking-tight">Leads Dashboard</h2>
-          <p className="text-sm text-gray-500 mt-1 flex items-center gap-2">
-            <span className="inline-flex items-center justify-center bg-primary/10 text-primary px-2.5 py-0.5 rounded-full font-medium">
-              {enquiries.length} Total
+          <p className="text-sm text-slate-500 flex items-center gap-2">
+            <span className="inline-flex items-center justify-center bg-primary/10 text-primary px-3 py-1 rounded-full font-bold text-xs uppercase tracking-tighter shadow-sm border border-primary/5">
+              {enquiries.length} Total Enquiries
             </span>
-            <span>managing all customer enquiries</span>
           </p>
         </div>
         <button
           onClick={fetchEnquiries}
-          className="px-4 py-2.5 text-sm bg-white border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition shadow-sm font-medium inline-flex items-center gap-2"
+          className="px-5 py-2.5 text-xs bg-white border border-slate-200 text-slate-700 rounded-xl hover:bg-slate-50 transition shadow-sm font-bold inline-flex items-center gap-2 uppercase tracking-widest"
         >
-          <Clock className="w-4 h-4 text-gray-400" />
-          Refresh Data
+          <Clock className="w-4 h-4 text-slate-400" />
+          Synchronize Data
         </button>
       </div>
 
-      {isDemoMode && error && (
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5 flex-shrink-0" />
-            <div>
-              <h3 className="text-sm font-semibold text-amber-800">Showing Demo Data ({error})</h3>
-              <p className="text-xs text-amber-700 mt-1">If you are seeing this, either your backend MongoDB is offline or you are not logged in. Demo leads are shown below.</p>
-            </div>
-          </div>
-          {error.includes("Unauthorized") && (
-            <button
-              onClick={handleAutoLogin}
-              className="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-lg shadow-sm transition-colors whitespace-nowrap"
-            >
-              Auto-login as Admin
-            </button>
-          )}
-        </div>
-      )}
+      {/* Demo notification removed per user request */}
 
       {/* Filters Bar */}
       <div className="flex flex-col md:flex-row gap-3 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm relative z-10 w-full overflow-visible">
@@ -217,9 +203,9 @@ export default function EnquiriesPage() {
             onChange={(e) => setStatusFilter(e.target.value as FilterStatus)}
           >
             <option value="all">All Statuses</option>
-            <option value="new">New Leads</option>
+            <option value="pending">Pending Leads</option>
             <option value="contacted">Contacted</option>
-            <option value="converted">Converted</option>
+            <option value="closed">Closed / Converted</option>
           </select>
           <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
         </div>

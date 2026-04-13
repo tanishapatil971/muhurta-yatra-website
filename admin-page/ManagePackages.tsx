@@ -52,8 +52,8 @@ export default function ManagePackages({
     return (
       <div className="flex items-center justify-center min-h-[400px]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 border-4 border-[#C75B2A] border-t-transparent rounded-full animate-spin" />
-          <p className="text-sm font-medium text-[#8A7E74] animate-pulse">Syncing package data...</p>
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+          <p className="text-sm font-bold text-slate-400 animate-pulse uppercase tracking-widest">Syncing Destinations...</p>
         </div>
       </div>
     );
@@ -62,13 +62,13 @@ export default function ManagePackages({
   if (error) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <div className="max-w-md p-8 text-center bg-rose-50 border border-rose-100 rounded-2xl">
-          <div className="text-3xl mb-4">🚫</div>
-          <h3 className="text-lg font-bold text-rose-800 mb-2">Connection Error</h3>
-          <p className="text-sm text-rose-600 mb-6">{error}</p>
+        <div className="max-w-md p-10 text-center bg-rose-50 border border-rose-100 rounded-[2.5rem] shadow-xl shadow-rose-900/5">
+          <div className="text-4xl mb-6">🚫</div>
+          <h3 className="text-xl font-black text-rose-900 mb-2 tracking-tight">Access Denied / Error</h3>
+          <p className="text-sm text-rose-600 mb-8 leading-relaxed font-medium">{error}</p>
           <button 
             onClick={fetchPackages}
-            className="px-6 py-2 bg-rose-600 text-white font-bold rounded-xl hover:bg-rose-700 transition-colors shadow-lg shadow-rose-200"
+            className="w-full py-3 bg-rose-600 text-white font-black rounded-xl hover:bg-rose-700 transition-all shadow-lg shadow-rose-200 uppercase text-xs tracking-widest"
           >
             Retry Connection
           </button>
@@ -78,32 +78,24 @@ export default function ManagePackages({
   }
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-300">
-      <div>
-        <h2 className="text-3xl font-serif font-semibold text-[#1A1714]">
-          Manage Packages
-        </h2>
-        <p className="mt-1 text-sm text-[#8A7E74]">
-          View, edit, or remove existing travel packages from your database.
-        </p>
-      </div>
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center gap-2 px-4 py-2.5 bg-[#FFFCF7] border-[1.5px] border-[#EDE6D6] rounded-xl focus-within:border-[#C75B2A] transition-colors min-w-[280px]">
-          <Search className="w-4 h-4 text-[#8A7E74]" />
+        <div className="flex items-center gap-3 px-4 py-2 bg-white border border-slate-200 rounded-xl focus-within:ring-4 focus-within:ring-primary/10 focus-within:border-primary transition-all min-w-[320px] shadow-sm">
+          <Search className="w-4 h-4 text-slate-400" />
           <input
             type="text"
-            placeholder="Search destination..."
-            className="w-full bg-transparent outline-none text-[15px]"
+            placeholder="Search by destination name..."
+            className="w-full bg-transparent outline-none text-sm font-medium py-1"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <button
           onClick={() => setActiveTab("add-package")}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 font-bold text-white transition-all bg-[#C75B2A] rounded-xl shadow-[0_4px_14px_rgba(199,91,42,0.3)] hover:bg-[#B54E22] text-sm"
+          className="flex items-center justify-center gap-2 px-6 py-3 font-black text-white transition-all bg-primary rounded-xl shadow-xl shadow-primary/20 hover:bg-primary/90 hover:-translate-y-0.5 active:translate-y-0 text-xs uppercase tracking-widest"
         >
-          <Plus className="w-4 h-4" /> New Package
+          <Plus className="w-4 h-4" /> Create New Yatra
         </button>
       </div>
 

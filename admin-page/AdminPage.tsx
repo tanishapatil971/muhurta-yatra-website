@@ -4,6 +4,10 @@ import AddPackage from "./AddPackage";
 import ManagePackages from "./ManagePackages";
 import EnquiriesPage from "./EnquiriesPage";
 import ManagePlaces from "./ManagePlaces";
+import AddPlace from "./AddPlace";
+import AdminLayout from "./AdminLayout";
+import { useAuth } from "../landing-page/src/context/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { API_ENDPOINTS } from "../landing-page/src/config/api";
 
 // 🏆 Define strict types to prevent runtime errors
@@ -21,14 +25,28 @@ export interface TravelPackage {
   transport?: string;
 }
 
-export type AdminTab = "manage-packages" | "add-package" | "enquiries" | "manage-places";
+export type AdminTab = "manage-packages" | "add-package" | "enquiries" | "manage-places" | "add-place";
 
 export default function AdminPage() {
-  console.log("TRACING: Rendering AdminPage");
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+  
   const [activeTab, setActiveTab] = useState<AdminTab>("manage-packages");
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState<TravelPackage | null>(null);
   
+  const [isPlaceEditing, setIsPlaceEditing] = useState(false);
+  const [placeEditData, setPlaceEditData] = useState<any | null>(null);
+  
+  // 🏷️ Page Title Mapping
+  const TAB_TITLES: Record<AdminTab, string> = {
+    "manage-packages": "Manage Packages",
+    "add-package": isEditing ? "Edit Travel Package" : "Create New Package",
+    "enquiries": "Enquiry Dashboard",
+    "manage-places": "Explore Database",
+    "add-place": isPlaceEditing ? "Edit Destination" : "Add New Destination",
+  };
+
   // Central Package State - typed strictly
   const [packages, setPackages] = useState<TravelPackage[]>([]);
   const [loading, setLoading] = useState(true);
@@ -78,47 +96,76 @@ export default function AdminPage() {
     fetchPackages(); // Refresh data
   };
 
+  const handlePlaceEdit = (place: any) => {
+    setIsPlaceEditing(true);
+    setPlaceEditData(place);
+    setActiveTab("add-place");
+  };
+
+  const handlePlaceDone = () => {
+    setIsPlaceEditing(false);
+    setPlaceEditData(null);
+    setActiveTab("manage-places");
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
   return (
-    <div className="flex min-h-screen font-sans text-gray-900 bg-gray-50">
-      {/* Sidebar on left */}
-      <aside className="w-64 bg-white border-r border-gray-200 shrink-0">
-        <AdminSidebar 
-          activeTab={activeTab} 
+    <AdminLayout
+      title={TAB_TITLES[activeTab]}
+      adminName={user?.name || "Administrator"}
+      adminEmail={user?.email || "admin@yatra.com"}
+      onLogout={handleLogout}
+      activeTab={activeTab}
+      setActiveTab={(tab) => {
+        window.scrollTo(0, 0);
+        setActiveTab(tab as AdminTab);
+      }}
+    >
+      {activeTab === "manage-packages" && (
+        <ManagePackages 
+          packages={packages}
+          loading={loading}
+          error={error}
+          fetchPackages={fetchPackages}
           setActiveTab={(tab) => setActiveTab(tab as AdminTab)} 
+          onEdit={handleEdit} 
         />
-      </aside>
+      )}
 
-      {/* Content on right */}
-      <main className="flex-1 p-6 md:p-8 overflow-y-auto">
-        <div className="max-w-7xl mx-auto">
-          {activeTab === "manage-packages" && (
-            <ManagePackages 
-              packages={packages}
-              loading={loading}
-              error={error}
-              fetchPackages={fetchPackages}
-              setActiveTab={(tab) => setActiveTab(tab as AdminTab)} 
-              onEdit={handleEdit} 
-            />
-          )}
+      {activeTab === "add-package" && (
+        <AddPackage 
+          isEditing={isEditing} 
+          editData={editData} 
+          onDone={handleDone} 
+        />
+      )}
 
-          {activeTab === "add-package" && (
-            <AddPackage 
-              isEditing={isEditing} 
-              editData={editData} 
-              onDone={handleDone} 
-            />
-          )}
+      {activeTab === "enquiries" && (
+        <EnquiriesPage />
+      )}
 
-          {activeTab === "enquiries" && (
-            <EnquiriesPage />
-          )}
+      {activeTab === "manage-places" && (
+        <ManagePlaces 
+          onEdit={handlePlaceEdit}
+          setActiveTab={(tab) => {
+            setIsPlaceEditing(false);
+            setPlaceEditData(null);
+            setActiveTab(tab as AdminTab);
+          }}
+        />
+      )}
 
-          {activeTab === "manage-places" && (
-            <ManagePlaces />
-          )}
-        </div>
-      </main>
-    </div>
+      {activeTab === "add-place" && (
+        <AddPlace 
+          isEditing={isPlaceEditing}
+          editData={placeEditData}
+          onDone={handlePlaceDone}
+        />
+      )}
+    </AdminLayout>
   );
 }

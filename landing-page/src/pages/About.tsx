@@ -43,12 +43,12 @@ export default function About() {
         <div className="hero-overlay absolute inset-0" />
         <div className="absolute inset-0 flex items-center justify-center text-center px-4">
           <div className="animate-fade-up">
-            <span className="text-primary-foreground/70 font-semibold text-sm tracking-[0.3em] uppercase mb-4 block">Est. 2025</span>
-            <h1 className="font-heading text-4xl md:text-5xl lg:text-7xl font-bold text-primary-foreground mb-4">
-              Our New Chapter
+            <span className="text-white/80 font-bold text-xs tracking-widest uppercase mb-3 block">Est. 2024</span>
+            <h1 className="font-heading text-4xl md:text-6xl font-bold text-white mb-4">
+              Our Journey
             </h1>
-            <p className="text-primary-foreground/80 text-lg md:text-xl max-w-2xl mx-auto font-light leading-relaxed">
-              We are a young team of enthusiasts on a mission to redefine how India travels.
+            <p className="text-white/90 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
+              Redefining how India travels with a focus on local depth and personal timing.
             </p>
           </div>
         </div>
@@ -63,11 +63,11 @@ export default function About() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <ScrollReveal>
               <div className="relative">
-                <span className="text-primary font-semibold text-sm tracking-widest uppercase">The Vision</span>
-                <h2 className="font-heading text-3xl md:text-4xl font-bold mt-2 text-foreground mb-6">
-                  Fresh Perspective, <br />Deep Roots.
+                <span className="text-primary font-black text-xs tracking-[0.3em] uppercase block mb-3 opacity-80 luxury-text-shadow">The Vision</span>
+                <h2 className="font-heading text-4xl md:text-5xl font-black mt-2 text-slate-900 luxury-text-shadow leading-tight">
+                  Fresh Perspectives. <br />Deep Conviction.
                 </h2>
-                <div className="w-16 h-1 bg-primary mb-8" />
+                <div className="w-20 h-1.5 bg-primary mt-6 rounded-full opacity-20" />
               </div>
             </ScrollReveal>
             
@@ -87,21 +87,21 @@ export default function About() {
       <section className="section-padding bg-muted/30">
         <div className="container-wide">
           <ScrollReveal>
-            <div className="text-center mb-16 px-4">
-              <span className="text-primary font-semibold text-sm tracking-widest uppercase">The Difference</span>
-              <h2 className="font-heading text-3xl md:text-4xl font-bold mt-2 text-foreground">Why Muhurta Yatra?</h2>
+            <div className="text-center mb-12 px-4">
+              <span className="text-primary font-bold text-sm tracking-widest uppercase block mb-2">The Difference</span>
+              <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900">Why Muhurta Yatra?</h2>
             </div>
           </ScrollReveal>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {whyChooseUs.map((item, i) => (
               <ScrollReveal key={i} delay={i * 100}>
-                <div className="bg-background border border-border/50 p-8 rounded-2xl hover-lift h-full transition-all hover:border-primary/20">
-                  <div className="w-14 h-14 rounded-xl bg-primary/5 flex items-center justify-center mb-6">
-                    <item.icon className="h-7 w-7 text-primary" />
+                <div className="clean-card p-8 h-full flex flex-col">
+                  <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6 text-primary">
+                    <item.icon className="w-6 h-6" strokeWidth={2.5} />
                   </div>
-                  <h3 className="font-heading text-xl font-bold text-foreground mb-3">{item.title}</h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
+                  <h3 className="font-heading text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
+                  <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
                 </div>
               </ScrollReveal>
             ))}
@@ -182,7 +182,7 @@ export default function About() {
                 <Button variant="hero" size="lg" asChild>
                   <Link to="/places">Explore Places</Link>
                 </Button>
-                <Button variant="outline" className="text-white hover:text-secondary border-white/20" size="lg" asChild>
+                <Button variant="heroOutline" size="lg" asChild>
                   <Link to="/booking">Book a Call</Link>
                 </Button>
               </div>

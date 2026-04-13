@@ -1,0 +1,17 @@
+{
+  "name": "muhurta-yatra-monorepo",
+  "version": "1.0.0",
+  "description": "Premium Travel Platform - Handcrafted Journeys",
+  "scripts": {
+    "postinstall": "npm install --prefix backend && npm install --prefix landing-page",
+    "backend": "npm start --prefix backend",
+    "frontend": "npm run dev --prefix landing-page",
+    "dev": "concurrently --kill-others-on-fail --prefix \"[{name}]\" --names \"SERVER,CLIENT\" --prefix-colors \"cyan,yellow\" \"npm run backend\" \"npm run frontend\"",
+    "start": "npm run backend",
+    "seed": "npm run seed --prefix backend",
+    "build": "npm run build --prefix landing-page"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

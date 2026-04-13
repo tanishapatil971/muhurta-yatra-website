@@ -14,6 +14,19 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 
+// 🛑 GLOBAL CRASH PROTECTION
+process.on('uncaughtException', (err) => {
+    console.error('💥 UNCAUGHT EXCEPTION! Shutting down gracefully...');
+    console.error(err.name, err.message, err.stack);
+    process.exit(1);
+});
+
+process.on('unhandledRejection', (err) => {
+    console.error('💥 UNHANDLED REJECTION! Shutting down gracefully...');
+    console.error(err.name, err.message);
+    process.exit(1);
+});
+
 // 🛡️ Middleware: Essential Setup
 app.use(cors({
     origin: "*", // Adjust for specific origins when in production
@@ -29,13 +42,13 @@ app.use((req, res, next) => {
     next();
 });
 
-// 🛣️ Middleware: Database Connectivity Check (Stops auth routes if DB is down)
+// 🛣️ Middleware: Database Connectivity Check
 const dbCheck = (req, res, next) => {
     if (mongoose.connection.readyState !== 1) {
-        console.error(`[CRITICAL] 🛑 Auth request denied: MongoDB is DISCONNECTED.`);
+        console.error(`[CRITICAL] 🛑 request denied: MongoDB is DISCONNECTED.`);
         return res.status(503).json({ 
-            message: 'Authentication service temporarily unavailable.', 
-            error: 'Database connection is not established. Please check MongoDB Atlas IP whitelisting.' 
+            message: 'Service temporarily unavailable.', 
+            error: 'Database connection is not established. Auto-reconnecting...' 
         });
     }
     next();
@@ -43,7 +56,7 @@ const dbCheck = (req, res, next) => {
 
 // 🛣️ Routes
 app.use('/api/enquiries', enquiryRoutes);
-app.use('/api/auth', dbCheck, authRoutes); // Auth routes now have strict DB dependency
+app.use('/api/auth', dbCheck, authRoutes);
 app.use('/api/packages', packageRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/places', placeRoutes);
@@ -52,31 +65,51 @@ app.use('/api/places', placeRoutes);
 app.get('/api/health', (req, res) => {
     res.status(200).json({ 
         status: 'UP', 
-        database: mongoose.connection.readyState === 1 ? 'CONNECTED' : 'DISCONNECTED'
+        database: mongoose.connection.readyState === 1 ? 'CONNECTED' : 'DISCONNECTED',
+        timestamp: new Date().toISOString()
     });
 });
 
-// 🌐 Connect to MongoDB & Start Server
-const startServer = async () => {
-    console.log("🕒 Connecting to MongoDB...");
+// 🔄 MONGOOSE EVENT LISTENERS (For Auto-Recovery)
+mongoose.connection.on('connected', () => console.log('✅ [DATABASE] MongoDB Connection Success.'));
+mongoose.connection.on('error', (err) => console.error('❌ [DATABASE] MongoDB Error:', err.message));
+mongoose.connection.on('disconnected', () => {
+    console.warn('⚠️  [DATABASE] MongoDB Disconnected. Retrying in 5s...');
+    setTimeout(connectWithRetry, 5000);
+});
+
+async function connectWithRetry() {
+    if (mongoose.connection.readyState === 1) return;
+    console.log('🕒 [DATABASE] Attempting to reconnect...');
     try {
-        if (!MONGO_URI) {
-            throw new Error("❌ MONGO_URI is not defined in environment variables.");
-        }
-        
-        await mongoose.connect(MONGO_URI, { 
-            serverSelectionTimeoutMS: 8000 
-        });
-        console.log("✅ MongoDB Connection Established Successfully.");
+        await mongoose.connect(MONGO_URI);
     } catch (err) {
-        console.error("❌ MongoDB Connection Error:", err.message);
-        console.warn("⚠️  Server will continue to run in FALLBACK DUMMY DATA mode.");
+        console.error('❌ [DATABASE] Reconnection failed. Retrying soon.');
+    }
+}
+
+// 🌐 Start Server
+const startServer = async () => {
+    // 🛡️ Sanity Check
+    if (!MONGO_URI) {
+        console.error("\n❌ [CRITICAL ERROR] MONGO_URI is missing from .env!");
+        console.error("Please add your MongoDB connection string to backend/.env\n");
+        process.exit(1);
+    }
+
+    console.log("🕒 Initializing MongoDB Connection...");
+    try {
+        await mongoose.connect(MONGO_URI, { 
+            serverSelectionTimeoutMS: 5000 
+        });
+    } catch (err) {
+        console.error("❌ [DATABASE] Initial connection failed:", err.message);
+        console.warn("⚠️  Server is starting without DB. Auto-retry is active.");
     }
 
     app.listen(PORT, '0.0.0.0', () => {
-        console.log(`\n🚀 Server is up and running correctly!`);
-        console.log(`📁 API Base URL: http://localhost:${PORT}/api`);
-        console.log(`🌍 Health Check: http://localhost:${PORT}/api/health\n`);
+        console.log(`\n🚀 MUHURTA YATRA BACKEND: Running on http://localhost:${PORT}`);
+        console.log(`🌍 Health: http://localhost:${PORT}/api/health\n`);
     });
 };
 

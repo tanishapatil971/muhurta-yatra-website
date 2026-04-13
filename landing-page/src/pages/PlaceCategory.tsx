@@ -33,27 +33,34 @@ export default function PlaceCategory() {
   const [places, setPlaces] = useState<PlaceInfo[]>([]);
   const [selected, setSelected] = useState("");
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
   const contactHref = `tel:${CONTACT.phone.replace(/\s+/g, "")}`;
 
-  useEffect(() => {
-    const fetchCategoryPlaces = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(`${API_ENDPOINTS.places}?category=${category}`);
-        if (!res.ok) throw new Error("Failed to fetch places");
-        
-        const data = await res.json();
-        setPlaces(data);
-        if (data.length > 0) {
-          setSelected(data[0].idKey);
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
+  const fetchCategoryPlaces = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`${API_ENDPOINTS.places}?category=${category}`);
+      if (!res.ok) {
+        if (res.status === 503) throw new Error("Server is connecting to database. Please wait...");
+        throw new Error("Failed to fetch places");
       }
-    };
+      
+      const data = await res.json();
+      setPlaces(data);
+      if (data.length > 0) {
+        setSelected(data[0].idKey);
+      }
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Connection Error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     if (category) {
       fetchCategoryPlaces();
     }
@@ -270,12 +277,30 @@ export default function PlaceCategory() {
   const titles: Record<string, string> = { forts: "Forts", hills: "Hill Stations", beaches: "Beaches", pilgrim: "Pilgrim Sites" };
   const currentTitle = category ? titles[category] : "Places";
 
-  if (!loading && places.length === 0) {
+  if (!loading && (error || places.length === 0)) {
     return (
       <main className="section-padding bg-background min-h-screen flex items-center justify-center pt-20">
-        <div className="text-center">
-          <h1 className="font-heading text-3xl font-bold text-foreground mb-4">Category not found or empty</h1>
-          <Button variant="hero" asChild><Link to="/places">← Back to Places</Link></Button>
+        <div className="text-center max-w-md mx-auto px-4">
+          <div className="mb-6 p-6 bg-muted rounded-2xl border border-border">
+            <h1 className="font-heading text-2xl font-bold text-foreground mb-2">
+              {error ? "Backend Connection Issue" : "Category Empty"}
+            </h1>
+            <p className="text-muted-foreground mb-6">
+              {error 
+                ? "The server is currently offline or connecting to the database. We're working on it!" 
+                : "We haven't added destinations to this category yet. Check back soon!"}
+            </p>
+            <div className="flex flex-col gap-3">
+              {error && (
+                <Button variant="hero" onClick={fetchCategoryPlaces}>
+                  Try Again
+                </Button>
+              )}
+              <Button variant="outline" asChild>
+                <Link to="/places">Explore Other Places</Link>
+              </Button>
+            </div>
+          </div>
         </div>
       </main>
     );
@@ -320,14 +345,22 @@ export default function PlaceCategory() {
           </aside>
 
           {/* Main content */}
-          {loading && <div className="flex-1 min-w-0 p-10 animate-pulse bg-gray-50 rounded-2xl h-[500px]"></div>}
+          {loading && <div className="flex-1 min-w-0 p-10 animate-pulse bg-muted rounded-2xl h-[500px]"></div>}
           
           {!loading && place && (
             <div className="flex-1 min-w-0">
               <ScrollReveal key={selected}>
                 {/* Hero image */}
                 <div className="rounded-2xl overflow-hidden aspect-[16/9] mb-8">
-                  <img src={place.img} alt={place.name} className="w-full h-full object-cover" loading="lazy" />
+                  <img 
+                    src={place.img} 
+                    alt={place.name} 
+                    className="w-full h-full object-cover" 
+                    loading="lazy"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1200&auto=format&fit=crop";
+                    }}
+                  />
                 </div>
 
                 <h1 className="font-heading text-3xl md:text-4xl font-bold text-foreground mb-4">{place.name}</h1>

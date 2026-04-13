@@ -1,23 +1,22 @@
 import { Link } from "react-router-dom";
 import ScrollReveal from "@/components/ScrollReveal";
-import heroSinhagad from "@/assets/hero-sinhagad.jpg";
-import fortImg from "@/assets/fort-lohagad.jpg";
-import beachImg from "@/assets/beach-harihareshwar.jpg";
-import pilgrimImg from "@/assets/pilgrim-temple.jpg";
-import heroPawna from "@/assets/hero-pawna.jpg";
+const fortImg = "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=2000&auto=format&fit=crop";
+const beachImg = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2000&auto=format&fit=crop";
+const pilgrimImg = "https://images.unsplash.com/photo-1548013146-72479768bbaa?q=80&w=2000&auto=format&fit=crop";
+const heroHills = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000&auto=format&fit=crop";
 
 const categories = [
   {
     title: "Forts",
     desc: "Walk the legendary Maratha forts — from Sinhagad to Raigad, experience centuries of history.",
-    img: heroSinhagad,
+    img: fortImg,
     to: "/places/forts",
     color: "from-earth/80",
   },
   {
     title: "Hill Stations",
     desc: "Cool retreats in the Sahyadri ranges — Lonavala, Mahabaleshwar, Matheran & more.",
-    img: heroPawna,
+    img: heroHills,
     to: "/places/hills",
     color: "from-sahyadri/80",
   },
@@ -42,7 +41,14 @@ export default function Places() {
     <main>
       {/* Hero */}
       <section className="relative h-[50vh] min-h-[350px] overflow-hidden">
-        <img src={fortImg} alt="Explore Destinations" className="w-full h-full object-cover" />
+        <img 
+          src={fortImg} 
+          alt="Explore Destinations" 
+          className="w-full h-full object-cover" 
+          onError={(e) => {
+            (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1200&auto=format&fit=crop";
+          }}
+        />
         <div className="hero-overlay absolute inset-0" />
         <div className="absolute inset-0 flex items-center justify-center text-center px-4">
           <div>
@@ -69,6 +75,9 @@ export default function Places() {
                     alt={cat.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     loading="lazy"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1200&auto=format&fit=crop";
+                    }}
                   />
                   <div className={`absolute inset-0 bg-gradient-to-t ${cat.color} via-transparent to-transparent opacity-90`} />
                   <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 to-transparent" />

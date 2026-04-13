@@ -1,85 +1,70 @@
-import { Link, useLocation } from "react-router-dom";
-import { Home, Map, Compass, Star } from "lucide-react";
+import React from "react";
+import { Search, Map as MapIcon, Calendar, ArrowRight } from "lucide-react";
+import UserLayout from "./UserLayout";
 
-export default function Dashboard() {
-  const location = useLocation();
-
-  const navItems = [
-    { name: "Dashboard", path: "/dashboard", icon: Home },
-    { name: "My Trips", path: "/my-trips", icon: Map },
-    { name: "Explore", path: "/explore", icon: Compass },
-    { name: "Personalized", path: "/personalized", icon: Star },
-  ];
-
+export default function MyTrips() {
   return (
-    <div className="min-h-screen flex">
-
-      {/* SIDEBAR */}
-      <div className="w-64 bg-black text-white p-6 flex flex-col">
-        <h2 className="text-xl font-bold mb-8">Muhurta Yatra</h2>
-
-        <nav className="flex flex-col gap-4 flex-1">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.path;
-
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`flex items-center gap-3 p-3 rounded-lg transition ${
-                  isActive
-                    ? "bg-white text-black font-semibold"
-                    : "hover:bg-gray-800"
-                }`}
-              >
-                <Icon className="w-5 h-5" />
-                {item.name}
-              </Link>
-            );
-          })}
-        </nav>
-      </div>
-
-      {/* MAIN CONTENT */}
-      <div className="flex-1 p-10 bg-gray-50">
-
-        {/* TOP BAR */}
-        <div className="flex justify-between items-center mb-6">
+    <UserLayout>
+       <div className="p-8 lg:p-10 max-w-6xl mx-auto space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+        
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">Welcome, Traveller 👋</h1>
-            <p className="text-gray-600">Here’s your travel overview</p>
+            <h2 className="text-3xl font-heading font-black text-slate-900 tracking-tight">My Bookings</h2>
+            <p className="text-sm text-slate-500 mt-1">Manage your upcoming and past yatras</p>
           </div>
-
-          <button
-            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition"
-            onClick={() => window.location.href = "/"}
-          >
-            Logout
-          </button>
+          
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input 
+                type="text" 
+                placeholder="Search bookings..." 
+                className="pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-xl text-sm focus:ring-4 focus:ring-primary/10 transition-all outline-none w-64"
+              />
+            </div>
+          </div>
         </div>
 
-        {/* CARDS */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-          <div className="bg-white p-6 rounded-xl shadow hover:shadow-md transition">
-            <h2 className="text-lg font-semibold">My Trips</h2>
-            <p className="text-gray-600">View your planned journeys</p>
+        {/* EMPTY STATE (Since real data is fetched later) */}
+        <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm p-16 text-center max-w-2xl mx-auto flex flex-col items-center">
+          <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mb-6">
+            <MapIcon className="w-10 h-10 text-slate-200" />
           </div>
-
-          <div className="bg-white p-6 rounded-xl shadow hover:shadow-md transition">
-            <h2 className="text-lg font-semibold">Explore</h2>
-            <p className="text-gray-600">Discover new destinations</p>
+          <h3 className="text-xl font-bold text-slate-900 mb-2">No bookings found</h3>
+          <p className="text-slate-500 mb-8 leading-relaxed">It looks like you haven't booked any yatras yet. Start exploring our handcrafted packages to begin your journey.</p>
+          
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button 
+              onClick={() => window.location.href = "/explore"}
+              className="bg-primary text-white px-8 py-3 rounded-xl font-bold hover:bg-primary/90 transition-all flex items-center gap-2"
+            >
+              Explore Packages <ArrowRight className="w-4 h-4" />
+            </button>
+            <button className="bg-white border border-slate-200 text-slate-700 px-8 py-3 rounded-xl font-bold hover:bg-slate-50 transition-all">
+              Track Offline Booking
+            </button>
           </div>
+        </div>
 
-          <div className="bg-white p-6 rounded-xl shadow hover:shadow-md transition">
-            <h2 className="text-lg font-semibold">Personalized</h2>
-            <p className="text-gray-600">AI-based recommendations</p>
-          </div>
-
+        {/* PLACEHOLDER FOR COMPLETED TRIPS */}
+        <div className="pt-10">
+           <div className="flex items-center gap-3 mb-6 px-1">
+             <Calendar className="w-5 h-5 text-slate-400" />
+             <h3 className="text-sm font-bold text-slate-400 uppercase tracking-widest">History</h3>
+           </div>
+           
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-40 grayscale pointer-events-none">
+              {[1, 2].map(i => (
+                <div key={i} className="bg-white p-6 rounded-3xl border border-slate-50">
+                   <div className="h-32 bg-slate-100 rounded-2xl mb-4" />
+                   <div className="h-4 w-32 bg-slate-200 rounded-full mb-2" />
+                   <div className="h-3 w-48 bg-slate-100 rounded-full" />
+                </div>
+              ))}
+           </div>
         </div>
 
       </div>
-    </div>
+    </UserLayout>
   );
 }

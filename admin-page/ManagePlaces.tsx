@@ -16,7 +16,12 @@ type Place = {
   travelDetails: string;
 };
 
-export default function ManagePlaces() {
+interface ManagePlacesProps {
+  onEdit: (place: Place) => void;
+  setActiveTab: (tab: string) => void;
+}
+
+export default function ManagePlaces({ onEdit, setActiveTab }: ManagePlacesProps) {
   const [places, setPlaces] = useState<Place[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -50,15 +55,17 @@ export default function ManagePlaces() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Manage Places</h2>
-          <p className="text-sm text-gray-500 mt-1">
-            Core destinations and sample itinerary configurations.
+          <p className="text-sm font-bold text-slate-400 uppercase tracking-[0.2em] px-1">
+            Database Configuration
           </p>
         </div>
-        <button className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-xl text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm">
-          <Plus className="w-4 h-4" /> Add Place
+        <button 
+          onClick={() => setActiveTab("add-place")}
+          className="flex items-center justify-center gap-2 bg-primary text-white px-6 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-primary/90 transition-all shadow-xl shadow-primary/20"
+        >
+          <Plus className="w-4 h-4" /> Add New Destination
         </button>
       </div>
 
@@ -75,7 +82,10 @@ export default function ManagePlaces() {
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-bold text-gray-900 truncate pr-4">{place.name}</h3>
                   <div className="flex gap-2">
-                    <button className="p-2 text-gray-400 hover:text-primary bg-gray-50 hover:bg-primary/10 rounded-lg transition-colors">
+                    <button 
+                      onClick={() => onEdit(place)}
+                      className="p-2 text-gray-400 hover:text-primary bg-gray-50 hover:bg-primary/10 rounded-lg transition-colors"
+                    >
                       <Edit2 className="w-4 h-4" />
                     </button>
                     <button onClick={() => deletePlace(place._id)} className="p-2 text-gray-400 hover:text-red-500 bg-gray-50 hover:bg-red-50 rounded-lg transition-colors">

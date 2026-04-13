@@ -3,13 +3,21 @@ import { Package, Plus, MessageSquare, Map } from "lucide-react";
 interface AdminSidebarProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  adminName?: string;
+  adminEmail?: string;
 }
 
-export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarProps) {
+export default function AdminSidebar({ 
+  activeTab, 
+  setActiveTab, 
+  adminName = "Administrator", 
+  adminEmail = "admin@yatra.com" 
+}: AdminSidebarProps) {
   const menuItems = [
     { id: "manage-packages", label: "Manage Packages", icon: Package },
     { id: "manage-places", label: "Manage Places", icon: Map },
     { id: "add-package", label: "Add Package", icon: Plus },
+    { id: "add-place", label: "Add Destination", icon: Plus },
     { id: "enquiries", label: "Enquiries", icon: MessageSquare },
   ];
 
@@ -46,8 +54,8 @@ export default function AdminSidebar({ activeTab, setActiveTab }: AdminSidebarPr
             A
           </div>
           <div className="text-left overflow-hidden">
-            <p className="text-xs font-bold text-gray-900 truncate">Administrator</p>
-            <p className="text-[10px] text-gray-500 truncate">admin@yatra.com</p>
+            <p className="text-xs font-bold text-gray-900 truncate">{adminName}</p>
+            <p className="text-[10px] text-gray-500 truncate">{adminEmail}</p>
           </div>
         </div>
       </div>

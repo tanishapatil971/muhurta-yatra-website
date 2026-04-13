@@ -62,7 +62,7 @@ export default function Login() {
           </p>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-5">
+        <form onSubmit={handleLogin} className="space-y-5" autoComplete="off">
           <div className="space-y-2">
             <Label>Email Address</Label>
             <Input
@@ -73,6 +73,7 @@ export default function Login() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               disabled={isSubmitting}
+              autoComplete="off"
             />
           </div>
 
@@ -85,6 +86,7 @@ export default function Login() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={isSubmitting}
+              autoComplete="new-password"
             />
           </div>
 

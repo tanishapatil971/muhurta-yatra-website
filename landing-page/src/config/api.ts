@@ -9,6 +9,7 @@ export const API_ENDPOINTS = {
   enquiries: `${API_BASE_URL}/api/enquiries`,
   packages: `${API_BASE_URL}/api/packages`,
   places: `${API_BASE_URL}/api/places`,
+  health: `${API_BASE_URL}/api/health`,
   auth: {
     login: `${API_BASE_URL}/api/auth/login`,
     register: `${API_BASE_URL}/api/auth/register`,

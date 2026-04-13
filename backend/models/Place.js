@@ -57,7 +57,7 @@ const placeSchema = new mongoose.Schema({
   },
   departureInfo: {
     type: String,
-    default: 'Pimpri-Chinchwad pickup points available.',
+    default: 'Standard pickup points available.',
   },
   travelDetails: {
     type: String,

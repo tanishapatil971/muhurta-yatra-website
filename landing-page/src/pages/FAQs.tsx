@@ -6,8 +6,8 @@ import { CONTACT } from "@/config/contact";
 
 const faqs = [
   {
-    q: "What are the best forts near Pimpri-Chinchwad?",
-    a: "Some of the best forts near Pimpri include Sinhagad Fort (50 km), Lohagad Fort (65 km), Torna Fort (60 km), and Rajmachi Fort (80 km). We organize guided treks to all of these with transport, meals, and expert guides."
+    q: "What are the best forts near Mumbai?",
+    a: "Some of the best forts near Mumbai include Sinhagad Fort (180 km), Lohagad Fort (100 km), Torna Fort (210 km), and Raigad Fort (170 km). We organize guided treks to all of these with transport, meals, and expert guides."
   },
   {
     q: "How do I book a custom yatra?",
@@ -42,8 +42,8 @@ const faqs = [
     a: "Cancellations made 7+ days before the trip get a full refund minus processing fees. Cancellations 3-7 days before get a 50% refund. Less than 3 days notice is non-refundable. We also offer trip date changes subject to availability."
   },
   {
-    q: "How experienced is your team?",
-    a: "Our team has 15+ years of experience in tourism. Our trek leaders are certified mountaineers, our drivers know every route, and our planning team has organized 500+ trips. We're a trusted name in Pimpri-Chinchwad."
+    q: "How experienced is the Muhurta Yatra team?",
+    a: "Our core team has extensive experience in specialized tourism across Maharashtra. Our trek leaders are certified mountaineers, our drivers know every route, and our planning team focuses on high-quality, perfectly timed yatras. We're a trusted name in Mumbai, serving travellers from all across the MMR region."
   },
 ];
 
