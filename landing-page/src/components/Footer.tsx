@@ -9,7 +9,7 @@ export default function Footer() {
   const contactHref = `tel:+91${CONTACT.phone.replace(/\s+/g, "")}`;
 
   return (
-    <footer className="bg-foreground text-background" role="contentinfo">
+    <footer className="bg-slate-950 text-slate-300 dark:bg-[#0f1115] dark:border-t dark:border-border" role="contentinfo">
       {/* CTA strip */}
       <div className="bg-primary section-padding !py-10">
         <div className="container-wide flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
@@ -37,12 +37,12 @@ export default function Footer() {
               <img src={logo} alt="Muhurta Yatra" className="h-10 w-10" loading="lazy" />
               <span className="font-heading text-xl font-bold">Muhurta Yatra</span>
             </div>
-            <p className="text-background/70 text-sm leading-relaxed">
+            <p className="text-slate-400 dark:text-muted-foreground text-sm leading-relaxed">
               Handcrafted journeys across India – spiritual tours, honeymoon packages & cultural experiences.
             </p>
             <div className="flex gap-3 mt-4">
               {[Facebook, Instagram, Twitter, Youtube].map((Icon, i) => (
-                <a key={i} href="#" className="p-2 rounded-full bg-background/10 hover:bg-primary transition-colors" aria-label="Social link">
+                <a key={i} href="#" className="p-2 rounded-full bg-white/5 hover:bg-primary transition-colors" aria-label="Social link">
                   <Icon className="h-4 w-4" />
                 </a>
               ))}
@@ -60,7 +60,7 @@ export default function Footer() {
                 { label: "FAQs", to: "/faqs" },
               ].map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="text-background/70 hover:text-primary transition-colors">
+                  <Link to={l.to} className="text-slate-400 hover:text-primary transition-colors">
                     {l.label}
                   </Link>
                 </li>
@@ -79,7 +79,7 @@ export default function Footer() {
                 { label: "Pilgrim Sites", to: "/places/pilgrim" },
               ].map((l) => (
                 <li key={l.to}>
-                  <Link to={l.to} className="text-background/70 hover:text-primary transition-colors">
+                  <Link to={l.to} className="text-slate-400 hover:text-primary transition-colors">
                     {l.label}
                   </Link>
                 </li>
@@ -91,15 +91,15 @@ export default function Footer() {
           <div>
             <h4 className="font-heading text-lg font-semibold mb-4">Contact Us</h4>
             <ul className="space-y-3 text-sm">
-              <li className="flex items-start gap-2 text-background/70">
+              <li className="flex items-start gap-2 text-slate-400">
                 <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-primary" />
                 Mumbai, Maharashtra, India
               </li>
-              <li className="flex items-center gap-2 text-background/70">
+              <li className="flex items-center gap-2 text-slate-400">
                 <Phone className="h-4 w-4 shrink-0 text-primary" />
                 <a href={contactHref} className="hover:text-primary transition-colors">{CONTACT.phone}</a>
               </li>
-              <li className="flex items-center gap-2 text-background/70">
+              <li className="flex items-center gap-2 text-slate-400">
                 <Mail className="h-4 w-4 shrink-0 text-primary" />
                 <a href="mailto:info@muhurtayatra.com" className="hover:text-primary transition-colors">info@muhurtayatra.com</a>
               </li>
@@ -109,8 +109,8 @@ export default function Footer() {
       </div>
 
       {/* Bottom bar */}
-      <div className="border-t border-background/10 py-4 px-4">
-        <div className="container-wide flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-background/50">
+      <div className="border-t border-white/10 py-4 px-4">
+        <div className="container-wide flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
           <div className="flex items-center gap-4">
             <p>© {new Date().getFullYear()} Muhurta Yatra. All rights reserved.</p>
             <Link to="/login?role=admin" className="hover:text-primary transition-colors hover:underline">

@@ -47,13 +47,13 @@ export default function Dashboard() {
             { label: "Points Earned", val: "250", icon: Star, color: "text-amber-600", bg: "bg-amber-50" },
             { label: "Wishlist", val: "4", icon: Heart, color: "text-rose-600", bg: "bg-rose-50" },
           ].map((stat, i) => (
-             <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-5 hover:shadow-md transition-shadow cursor-default group">
+             <div className="bg-card text-card-foreground p-6 rounded-2xl shadow-sm border border-border flex items-center gap-5 hover:shadow-md transition-all cursor-default group">
               <div className={`w-12 h-12 rounded-xl ${stat.bg} flex items-center justify-center`}>
                  <stat.icon className={`w-6 h-6 ${stat.color}`} />
               </div>
               <div>
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-tighter">{stat.label}</p>
-                <p className="text-2xl font-bold text-slate-800">{stat.val}</p>
+                <p className="text-xs font-bold text-muted-foreground uppercase tracking-tighter">{stat.label}</p>
+                <p className="text-2xl font-bold text-foreground">{stat.val}</p>
               </div>
             </div>
           ))}
@@ -66,18 +66,18 @@ export default function Dashboard() {
           <div className="lg:col-span-2 space-y-6">
             <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest px-1">Quick Actions</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Link to="/explore" className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group overflow-hidden relative">
+              <Link to="/explore" className="bg-card text-card-foreground p-8 rounded-3xl border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group overflow-hidden relative">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500" />
                 <Compass className="w-10 h-10 text-primary mb-6 group-hover:rotate-12 transition-transform" />
-                <h3 className="text-xl font-bold text-slate-800 mb-2">Explore New Places</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">Discover handcrafted spiritual and cultural trails across India.</p>
+                <h3 className="text-xl font-bold text-foreground mb-2">Explore New Places</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">Discover handcrafted spiritual and cultural trails across India.</p>
               </Link>
 
-              <Link to="/my-trips" className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group overflow-hidden relative">
+              <Link to="/my-trips" className="bg-card text-card-foreground p-8 rounded-3xl border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group overflow-hidden relative">
                  <div className="absolute top-0 right-0 w-32 h-32 bg-secondary/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500" />
                 <Map className="w-10 h-10 text-secondary mb-6 group-hover:rotate-12 transition-transform" />
-                <h3 className="text-xl font-bold text-slate-800 mb-2">My Itineraries</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">Access your downloaded PDFs and upcoming journey details.</p>
+                <h3 className="text-xl font-bold text-foreground mb-2">My Itineraries</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">Access your downloaded PDFs and upcoming journey details.</p>
               </Link>
             </div>
 
@@ -98,15 +98,15 @@ export default function Dashboard() {
              <h2 className="text-sm font-black text-slate-400 uppercase tracking-[0.2em] px-1 flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-emerald-500" /> Trending Now
              </h2>
-             <div className="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden group/sidebar">
-                <div className="p-6 border-b border-slate-50 flex items-center justify-between bg-slate-50/50">
-                   <span className="text-[10px] font-black text-slate-800 uppercase tracking-widest">Latest Handcrafted Yatras</span>
+             <div className="bg-card rounded-[2.5rem] border border-border shadow-sm overflow-hidden group/sidebar">
+                <div className="p-6 border-b border-border flex items-center justify-between bg-muted/50">
+                   <span className="text-[10px] font-black text-foreground uppercase tracking-widest">Latest Handcrafted Yatras</span>
                 </div>
-                <div className="divide-y divide-slate-50">
+                <div className="divide-y divide-border">
                   {loading ? (
                     [1, 2, 3].map(i => (
                       <div key={i} className="p-4 animate-pulse">
-                        <div className="w-full h-12 bg-slate-100 rounded-2xl" />
+                        <div className="w-full h-12 bg-muted rounded-2xl" />
                       </div>
                     ))
                   ) : trending.length > 0 ? (
@@ -114,25 +114,25 @@ export default function Dashboard() {
                       <Link 
                         key={pkg._id} 
                         to="/explore"
-                        className="p-5 hover:bg-slate-50 transition-all flex items-center gap-4 cursor-pointer group/item"
+                        className="p-5 hover:bg-muted transition-all flex items-center gap-4 cursor-pointer group/item"
                       >
-                         <div className="w-12 h-12 rounded-2xl bg-slate-100 flex-shrink-0 flex items-center justify-center text-slate-400 group-hover/item:bg-primary group-hover/item:text-white transition-all transform group-hover/item:scale-110">
+                         <div className="w-12 h-12 rounded-2xl bg-muted flex-shrink-0 flex items-center justify-center text-muted-foreground group-hover/item:bg-primary group-hover/item:text-primary-foreground transition-all transform group-hover/item:scale-110">
                             <MapPin className="w-5 h-5" />
                          </div>
                          <div className="flex-1 min-w-0">
-                            <span className="text-sm font-bold text-slate-700 group-hover/item:text-primary transition-colors truncate block">{pkg.destination || pkg.name}</span>
-                            <span className="text-[10px] text-slate-400 uppercase font-bold tracking-tighter">View Details</span>
+                            <span className="text-sm font-bold text-foreground group-hover/item:text-primary transition-colors truncate block">{pkg.destination || pkg.name}</span>
+                            <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">View Details</span>
                          </div>
-                         <ChevronRight className="w-4 h-4 text-slate-300 transform group-hover/item:translate-x-1 transition-transform" />
+                         <ChevronRight className="w-4 h-4 text-muted-foreground transform group-hover/item:translate-x-1 transition-transform" />
                       </Link>
                     ))
                   ) : (
                     <div className="p-10 text-center">
-                       <p className="text-xs text-slate-400 italic">No packages found.</p>
+                       <p className="text-xs text-muted-foreground italic">No packages found.</p>
                     </div>
                   )}
                 </div>
-                <div className="p-6 bg-slate-50/50 text-center border-t border-slate-50">
+                <div className="p-6 bg-muted/50 text-center border-t border-border">
                    <Link to="/explore" className="text-[10px] font-black text-primary hover:text-primary/80 uppercase tracking-[0.2em] transition-all">Explore All Packages</Link>
                 </div>
              </div>

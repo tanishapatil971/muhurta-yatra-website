@@ -69,7 +69,7 @@ export default function Navbar() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         transparentAtTop
           ? "bg-transparent border-transparent shadow-none"
-          : "bg-white/90 dark:bg-background/90 backdrop-blur-md shadow-md border-b border-gray-200 dark:border-white/10"
+          : "bg-background/90 backdrop-blur-md shadow-md border-b border-border"
       }`}
       role="navigation"
       aria-label="Main navigation"
@@ -78,10 +78,10 @@ export default function Navbar() {
         <Link to="/" className="flex items-center gap-2 group" aria-label="Muhurta Yatra Home">
           <img src={logo} alt="Muhurta Yatra Logo" className="h-10 w-10 md:h-12 md:w-12" loading="lazy" />
           <div className="flex flex-col">
-            <span className={`font-heading text-2xl md:text-3xl font-bold leading-tight transition-colors duration-500 ${transparentAtTop ? "text-white" : "text-slate-900 dark:text-white"}`}>
+            <span className={`font-heading text-2xl md:text-3xl font-bold leading-tight transition-colors duration-500 ${transparentAtTop ? "text-white" : "text-foreground"}`}>
               Muhurta Yatra
             </span>
-            <span className={`text-[10px] tracking-widest uppercase transition-colors duration-500 ${transparentAtTop ? "text-white/80" : "text-gray-600"}`}>
+            <span className={`text-[10px] tracking-widest uppercase transition-colors duration-500 ${transparentAtTop ? "text-white/80" : "text-muted-foreground"}`}>
               Handcrafted Journeys
             </span>
           </div>
@@ -100,7 +100,7 @@ export default function Navbar() {
                     : "bg-primary/10 text-primary"
                   : transparentAtTop
                     ? "text-white hover:bg-white/15"
-                    : "text-slate-800 dark:text-slate-200 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
+                    : "text-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
             {link.label}
@@ -114,7 +114,7 @@ export default function Navbar() {
           className={`rounded-full transition-all duration-300 ${
             transparentAtTop
               ? "border-white/20 bg-white/10 text-white hover:bg-white/20"
-              : "border-gray-200 dark:border-white/10 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+              : "border-border text-foreground hover:bg-muted"
           }`}
           aria-label="Toggle theme"
         >
@@ -134,7 +134,7 @@ export default function Navbar() {
         {/* Mobile toggle */}
         <button
           className={`md:hidden p-2 rounded-lg transition-colors duration-300 ${
-            transparentAtTop ? "text-white hover:bg-white/15" : "text-gray-800 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+            transparentAtTop ? "text-white hover:bg-white/15" : "text-foreground hover:bg-muted"
           }`}
           onClick={() => setMobileOpen(!mobileOpen)}
           aria-label="Toggle menu"
@@ -150,7 +150,7 @@ export default function Navbar() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-white/95 backdrop-blur-lg border-b border-gray-200 overflow-hidden"
+            className="md:hidden bg-background/95 backdrop-blur-lg border-b border-border overflow-hidden text-foreground"
           >
             <div className="px-4 py-4 flex flex-col gap-1">
               {navLinks.map((link) => (
@@ -160,7 +160,7 @@ export default function Navbar() {
                   className={`px-4 py-3 rounded-lg text-base font-medium transition-colors ${
                     location.pathname === link.to
                       ? "bg-primary/10 text-primary"
-                      : "text-slate-800 hover:bg-slate-100"
+                      : "text-foreground hover:bg-muted"
                   }`}
                 >
                   {link.label}
@@ -170,7 +170,7 @@ export default function Navbar() {
                 <Button
                   variant="outline"
                   onClick={() => { toggleTheme(); setMobileOpen(false); }}
-                  className="w-full justify-start gap-3 rounded-lg border-gray-200"
+                  className="w-full justify-start gap-3 rounded-lg border-border"
                 >
                   {theme === "light" ? (
                     <>

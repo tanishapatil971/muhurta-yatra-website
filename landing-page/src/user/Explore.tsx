@@ -19,9 +19,9 @@ export default function Explore() {
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   useEffect(() => {
-    const fetchPackages = async () => {
+    const fetchPlaces = async () => {
       try {
-        const res = await fetch(API_ENDPOINTS.packages);
+        const res = await fetch(API_ENDPOINTS.places);
         const data = await res.json();
         setPackages(data);
       } catch (err) {
@@ -30,7 +30,7 @@ export default function Explore() {
         setLoading(false);
       }
     };
-    fetchPackages();
+    fetchPlaces();
   }, []);
 
   const filteredPackages = useMemo(() => {
@@ -46,17 +46,17 @@ export default function Explore() {
         
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <h2 className="text-3xl font-heading font-black text-slate-900 tracking-tight">Handcrafted Trails</h2>
-            <p className="text-sm text-slate-500 mt-1">Discover spiritual, cultural, and adventure yatras</p>
+            <h2 className="text-3xl font-heading font-black text-foreground tracking-tight">Handcrafted Trails</h2>
+            <p className="text-sm text-muted-foreground mt-1">Discover spiritual, cultural, and adventure yatras</p>
           </div>
           
           <div className="flex items-center gap-2">
-            <button className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all">
+            <button className="flex items-center gap-2 px-4 py-2 bg-card border border-border rounded-xl text-sm font-bold text-muted-foreground hover:bg-muted transition-all">
               <Filter className="w-4 h-4" /> Filter
             </button>
-            <div className="flex bg-white border border-slate-200 rounded-xl p-1">
-               <button className="p-1.5 bg-primary text-white rounded-lg shadow-sm shadow-primary/20"><Grid className="w-4 h-4" /></button>
-               <button className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-50 transition-colors"><ListIcon className="w-4 h-4" /></button>
+            <div className="flex bg-card border border-border rounded-xl p-1">
+               <button className="p-1.5 bg-primary text-primary-foreground rounded-lg shadow-sm shadow-primary/20"><Grid className="w-4 h-4" /></button>
+               <button className="p-1.5 text-muted-foreground hover:text-foreground rounded-lg hover:bg-muted transition-colors"><ListIcon className="w-4 h-4" /></button>
             </div>
           </div>
         </div>
@@ -67,7 +67,7 @@ export default function Explore() {
             <button 
               key={cat} 
               onClick={() => setSelectedCategory(cat)}
-              className={`px-5 py-2 rounded-full text-sm font-bold transition-all ${selectedCategory === cat ? "bg-[#0f172a] text-white shadow-xl shadow-slate-900/10" : "bg-white border border-slate-200 text-slate-500 hover:border-primary hover:text-primary"}`}
+              className={`px-5 py-2 rounded-full text-sm font-bold transition-all ${selectedCategory === cat ? "bg-foreground text-background shadow-lg" : "bg-card border border-border text-muted-foreground hover:border-primary hover:text-primary"}`}
             >
               {cat}
             </button>
@@ -84,8 +84,8 @@ export default function Explore() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredPackages.map(pkg => (
-              <div key={pkg._id} className="group bg-white rounded-[2.5rem] border border-slate-100 shadow-sm overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
-                  <div className="h-48 relative overflow-hidden bg-slate-100">
+              <div key={pkg._id} className="group clean-card p-0 rounded-[2.5rem] border border-border shadow-sm overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-500">
+                  <div className="h-48 relative overflow-hidden bg-muted">
                     <img 
                       src={pkg.img} 
                       alt={pkg.name} 
@@ -94,25 +94,25 @@ export default function Explore() {
                         (e.target as HTMLImageElement).src = `https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1200&auto=format&fit=crop`;
                       }}
                     />
-                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-primary shadow-sm">
+                    <div className="absolute top-4 right-4 bg-background/90 backdrop-blur px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest text-primary shadow-sm">
                       {pkg.categoryKey}
                     </div>
                   </div>
                   <div className="p-8">
                     <div className="flex items-center gap-2 mb-3">
                       <MapPin className="w-4 h-4 text-primary" />
-                      <span className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">{pkg.bestTime}</span>
+                      <span className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.2em]">{pkg.bestTime}</span>
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 mb-2 group-hover:text-primary transition-colors">{pkg.name}</h3>
-                    <p className="text-sm text-slate-500 leading-relaxed line-clamp-2">{pkg.desc}</p>
+                    <h3 className="text-xl font-bold text-foreground mb-2 group-hover:text-primary transition-colors">{pkg.name}</h3>
+                    <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">{pkg.desc}</p>
                     
-                    <div className="mt-8 pt-6 border-t border-slate-50 flex items-center justify-between">
+                    <div className="mt-8 pt-6 border-t border-border flex items-center justify-between">
                         <div>
-                          <span className="text-xs text-slate-400 font-bold block uppercase tracking-tighter">Starts From</span>
-                          <span className="text-lg font-black text-slate-900">₹{pkg.pricePerPerson.toLocaleString('en-IN')}</span>
+                          <span className="text-xs text-muted-foreground font-bold block uppercase tracking-tighter">Starts From</span>
+                          <span className="text-lg font-black text-foreground">₹{pkg.pricePerPerson.toLocaleString('en-IN')}</span>
                         </div>
                         <button 
-                          className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-primary group-hover:text-white transition-all shadow-sm"
+                          className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center text-muted-foreground group-hover:bg-primary group-hover:text-primary-foreground transition-all shadow-sm"
                         >
                            <ArrowRight className="w-5 h-5" />
                         </button>

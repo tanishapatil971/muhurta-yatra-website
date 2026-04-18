@@ -57,7 +57,27 @@ exports.createPlace = async (req, res) => {
 // @route PATCH /api/places/:id
 exports.updatePlace = async (req, res) => {
   try {
-    const updatedPlace = await Place.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    const updateData = { ...req.body };
+    const { removeImage } = updateData;
+    delete updateData.removeImage;
+
+    // Ignore empty image fields to preserve existing image
+    if (!updateData.img || updateData.img === "") {
+      delete updateData.img;
+    }
+
+    const dbUpdate = { $set: updateData };
+
+    if (removeImage === true) {
+      dbUpdate.$set.img = "";
+    }
+
+    const updatedPlace = await Place.findByIdAndUpdate(
+      req.params.id, 
+      dbUpdate, 
+      { new: true, runValidators: true }
+    );
+    
     if (!updatedPlace) return res.status(404).json({ message: 'Place not found' });
     res.json(updatedPlace);
   } catch (error) {

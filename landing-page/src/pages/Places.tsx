@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import ScrollReveal from "@/components/ScrollReveal";
-const fortImg = "https://images.unsplash.com/photo-1599661046289-e31897846e41?q=80&w=2000&auto=format&fit=crop";
-const beachImg = "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=2000&auto=format&fit=crop";
-const pilgrimImg = "https://images.unsplash.com/photo-1548013146-72479768bbaa?q=80&w=2000&auto=format&fit=crop";
-const heroHills = "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2000&auto=format&fit=crop";
+
+import fortImg from "@/assets/sinhagad-real.jpg";
+import beachImg from "@/assets/beach-harihareshwar.jpg";
+import pilgrimImg from "@/assets/pilgrim-temple.jpg";
+import heroHills from "@/assets/hero-pawna.jpg";
 
 const categories = [
   {
@@ -46,7 +47,7 @@ export default function Places() {
           alt="Explore Destinations" 
           className="w-full h-full object-cover" 
           onError={(e) => {
-            (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1200&auto=format&fit=crop";
+            (e.target as HTMLImageElement).src = "/placeholder.svg";
           }}
         />
         <div className="hero-overlay absolute inset-0" />
@@ -76,11 +77,11 @@ export default function Places() {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                     loading="lazy"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?q=80&w=1200&auto=format&fit=crop";
+                      (e.target as HTMLImageElement).src = "/placeholder.svg";
                     }}
                   />
-                  <div className={`absolute inset-0 bg-gradient-to-t ${cat.color} via-transparent to-transparent opacity-90`} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 to-transparent" />
+                  <div className={`absolute inset-0 bg-gradient-to-t ${cat.color} via-transparent to-transparent opacity-60`} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-neutral-950/80 via-neutral-950/20 to-transparent" />
                   <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
                     <h2 className="font-heading text-3xl md:text-4xl font-bold text-primary-foreground">{cat.title}</h2>
                     <p className="text-primary-foreground/80 text-sm md:text-base mt-2 max-w-md">{cat.desc}</p>

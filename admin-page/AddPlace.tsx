@@ -49,6 +49,8 @@ export default function AddPlace({
 
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [removeImage, setRemoveImage] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     if (isEditing && editData) {
@@ -68,12 +70,52 @@ export default function AddPlace({
         departureInfo: editData.departureInfo || "",
         travelDetails: editData.travelDetails || ""
       });
+      setRemoveImage(false);
     }
   }, [isEditing, editData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    if (name === "img" && value) setRemoveImage(false);
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setError("");
+
+    try {
+      const uploadForm = new FormData();
+      uploadForm.append("image", file);
+
+      const uploadUrl = API_ENDPOINTS.places.replace("/places", "/upload"); 
+      
+      const res = await fetch(uploadUrl, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token") || ""}`
+        },
+        body: uploadForm
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.message || "Upload failed. Please check Cloudinary configuration.");
+      }
+      
+      const data = await res.json();
+      setFormData(prev => ({ ...prev, img: data.imageUrl }));
+      setRemoveImage(false);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Failed to upload image.");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -96,7 +138,8 @@ export default function AddPlace({
           pricePerPerson: Number(formData.pricePerPerson) || 0,
           maxCapacity: Number(formData.maxCapacity) || 0,
           highlights: formData.highlights.split(",").map(s => s.trim()).filter(Boolean),
-          itinerary: formData.itinerary.split("\n").map(s => s.trim()).filter(Boolean)
+          itinerary: formData.itinerary.split("\n").map(s => s.trim()).filter(Boolean),
+          removeImage
         })
       });
 
@@ -161,9 +204,60 @@ export default function AddPlace({
               <option value="pilgrim">Pilgrim Sites</option>
             </select>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
             <label className="text-xs font-bold uppercase tracking-wider text-slate-500">Image URL</label>
-            <input name="img" value={formData.img} onChange={handleChange} required className="w-full px-4 py-3 bg-slate-50 border rounded-xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-medium" placeholder="Unsplash URL preferred" />
+            
+            {(formData.img || (isEditing && editData?.img && !removeImage)) && (
+              <div className="relative w-full h-32 rounded-xl overflow-hidden border border-slate-200 group mt-2">
+                <img 
+                  src={formData.img || editData?.img} 
+                  alt="Place Preview" 
+                  className="w-full h-full object-cover"
+                  onError={(e) => (e.currentTarget.style.display = 'none')}
+                />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setRemoveImage(true);
+                      setFormData(prev => ({ ...prev, img: "" }));
+                    }}
+                    className="px-4 py-2 bg-rose-600 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-lg hover:bg-rose-700 transition"
+                  >
+                    Remove Image
+                  </button>
+                </div>
+              </div>
+            )}
+
+            <div className="flex flex-col space-y-2 mt-2">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFileUpload}
+                disabled={uploading}
+                className="w-full px-4 py-3 bg-slate-50 border rounded-xl outline-none focus:ring-4 focus:ring-primary/10 transition-all font-medium file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-primary/90 cursor-pointer"
+              />
+              
+              {uploading && (
+                <p className="text-xs text-primary font-bold animate-pulse mt-1 tracking-wider">
+                  ☁️ Uploading safely to Cloudinary...
+                </p>
+              )}
+
+              <div className="flex items-center gap-2 mt-2">
+                <span className="text-xs text-gray-400 font-medium">Or</span>
+                <input
+                  type="text"
+                  name="img"
+                  value={formData.img}
+                  onChange={handleChange}
+                  required={!isEditing && !formData.img}
+                  placeholder="paste a URL directly as a fallback"
+                  className="flex-1 px-3 py-2 text-xs bg-white border border-slate-200 rounded-lg outline-none focus:border-gray-400 transition-all"
+                />
+              </div>
+            </div>
           </div>
         </div>
 

@@ -245,13 +245,13 @@ export default function Index() {
       </section>
 
       {/* SERVICES */}
-      <section id="services" className="section-padding bg-slate-50">
+      <section id="services" className="section-padding bg-muted">
         <div className="container-wide">
           <ScrollReveal>
             <div className="text-center mb-12">
               <span className="text-primary font-bold text-sm tracking-widest uppercase block mb-2">What We Offer</span>
-              <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900">Our Signature Experiences</h2>
-              <p className="text-slate-500 mt-3 max-w-2xl mx-auto">
+              <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground">Our Signature Experiences</h2>
+              <p className="text-muted-foreground mt-3 max-w-2xl mx-auto">
                 Carefully crafted journeys across India – spiritual, traditional, and memorable.
               </p>
             </div>
@@ -260,11 +260,11 @@ export default function Index() {
             {services.map((s, i) => (
               <ScrollReveal key={i} delay={i * 100}>
                 <div className="clean-card p-8 text-center h-full flex flex-col items-center">
-                  <div className={`w-14 h-14 rounded-2xl ${s.color} flex items-center justify-center mb-6 shadow-sm`}>
+                  <div className={`w-14 h-14 rounded-2xl ${s.color} flex items-center justify-center mb-6 shadow-sm ring-1 ring-border shadow-black/10`}>
                     <s.icon className="w-7 h-7" strokeWidth={2} />
                   </div>
-                  <h3 className="font-heading text-xl font-bold text-slate-900 mb-3">{s.title}</h3>
-                  <p className="text-slate-500 text-sm leading-relaxed flex-1">{s.desc}</p>
+                  <h3 className="font-heading text-xl font-bold text-foreground mb-3">{s.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed flex-1">{s.desc}</p>
                 </div>
               </ScrollReveal>
             ))}
@@ -320,7 +320,7 @@ export default function Index() {
               </Button>
             </div>
           ) : packages.length === 0 ? (
-            <div className="text-center py-24 bg-white/50 border-2 border-dashed border-border rounded-[2rem]">
+            <div className="text-center py-24 bg-card border-2 border-dashed border-border rounded-[2rem]">
               <div className="text-5xl mb-6 opacity-20 grayscale">🧳</div>
               <h3 className="text-xl font-bold text-foreground mb-2">No packages available</h3>
               <p className="text-muted-foreground italic max-w-md mx-auto mb-8">
@@ -345,9 +345,9 @@ export default function Index() {
                   transition={{ delay: i * 0.1 }}
                   viewport={{ once: true }}
                 >
-                  <div className="clean-card bg-white overflow-hidden h-full flex flex-col group transition-all duration-300">
+                  <div className="clean-card overflow-hidden h-full flex flex-col group transition-all duration-300">
                     {/* Image Area */}
-                    <div className="relative h-60 overflow-hidden bg-slate-100 dark:bg-slate-800">
+                    <div className="relative h-60 overflow-hidden bg-muted">
                       <img
                         src={pkg.image || "/placeholder.svg"}
                         alt={pkg.destination}
@@ -359,7 +359,7 @@ export default function Index() {
 
                       {/* Floating Badges */}
                       <div className="absolute top-4 left-4 flex flex-col gap-2">
-                        <span className="bg-white/90 backdrop-blur-sm text-primary px-3 py-1 rounded-md text-[10px] font-bold tracking-wider uppercase shadow-sm border border-slate-100">
+                        <span className="bg-background/90 backdrop-blur-sm text-primary px-3 py-1 rounded-md text-[10px] font-bold tracking-wider uppercase shadow-sm border border-border">
                           {pkg.duration || "Best Deal"}
                         </span>
                         {pkg.status && (
@@ -374,27 +374,27 @@ export default function Index() {
                     <div className="p-6 flex-1 flex flex-col">
                       <div className="mb-4">
                         <div className="flex items-center justify-between gap-4 mb-1">
-                          <h3 className="font-heading text-xl font-bold text-slate-900 leading-tight">{pkg.destination}</h3>
+                          <h3 className="font-heading text-xl font-bold text-foreground leading-tight">{pkg.destination}</h3>
                         </div>
                         <div className="flex items-center gap-1.5">
-                          <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Starting from</span>
+                          <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider">Starting from</span>
                           <span className="text-xl font-bold text-primary">₹{(pkg.price || 0).toLocaleString("en-IN")}</span>
                         </div>
                       </div>
 
-                      <p className="text-slate-500 text-sm line-clamp-2 leading-relaxed mb-6">
+                      <p className="text-muted-foreground text-sm line-clamp-2 leading-relaxed mb-6">
                         {pkg.description || "Embark on an extraordinary journey with Muhurta Yatra."}
                       </p>
 
                       {/* Features Row */}
-                      <div className="grid grid-cols-2 gap-4 mb-6 pt-4 border-t border-slate-100">
+                      <div className="grid grid-cols-2 gap-4 mb-6 pt-4 border-t border-border">
                         <div className="flex items-center gap-2">
-                          <Compass className="w-4 h-4 text-slate-400" />
-                          <span className="text-xs font-bold text-slate-700 truncate">{pkg.transport || "Inclusive"}</span>
+                          <Compass className="w-4 h-4 text-muted-foreground" />
+                          <span className="text-xs font-bold text-foreground truncate">{pkg.transport || "Inclusive"}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Users className="w-4 h-4 text-slate-400" />
-                          <span className="text-xs font-bold text-slate-700 truncate">{pkg.maxPeople || 1} Guests</span>
+                          <Users className="w-4 h-4 text-muted-foreground" />
+                          <span className="text-xs font-bold text-foreground truncate">{pkg.maxPeople || 1} Guests</span>
                         </div>
                       </div>
 
@@ -453,12 +453,12 @@ export default function Index() {
       </section>
 
       {/* TESTIMONIALS */}
-      <section className="section-padding bg-slate-50">
+      <section className="section-padding bg-muted">
         <div className="container-wide">
           <ScrollReveal>
             <div className="text-center mb-10">
               <span className="text-primary font-bold text-sm tracking-widest uppercase block mb-2">Testimonials</span>
-              <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900">What Our Travelers Say</h2>
+              <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground">What Our Travelers Say</h2>
             </div>
           </ScrollReveal>
 
@@ -475,7 +475,7 @@ export default function Index() {
                       }`}
                   >
                     <div className="clean-card p-8 md:p-12 text-center flex flex-col items-center">
-                      <p className="text-slate-600 text-lg md:text-xl font-medium leading-relaxed mb-8 italic">
+                      <p className="text-muted-foreground text-lg md:text-xl font-medium leading-relaxed mb-8 italic">
                         "{t.text}"
                       </p>
 
@@ -484,8 +484,8 @@ export default function Index() {
                           {t.name[0]}
                         </div>
                         <div>
-                          <div className="font-bold text-slate-900">{t.name}</div>
-                          <div className="text-slate-500 text-xs uppercase tracking-wider">{t.location}</div>
+                          <div className="font-bold text-foreground">{t.name}</div>
+                          <div className="text-muted-foreground text-xs uppercase tracking-wider">{t.location}</div>
                         </div>
                       </div>
                     </div>
@@ -510,52 +510,52 @@ export default function Index() {
       </section>
 
       {/* CONTACT FORM */}
-      <section className="section-padding bg-white dark:bg-background" id="contact">
+      <section className="section-padding bg-background" id="contact">
         <div className="container-wide max-w-3xl">
           <ScrollReveal>
             <div className="text-center mb-10">
               <span className="text-primary font-bold text-sm tracking-widest uppercase block mb-2">Get In Touch</span>
-              <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900">Plan Your Journey</h2>
-              <p className="text-slate-500 mt-2">Fill in your details and we'll get back to you soon.</p>
+              <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground">Plan Your Journey</h2>
+              <p className="text-muted-foreground mt-2">Fill in your details and we'll get back to you soon.</p>
             </div>
           </ScrollReveal>
 
           <ScrollReveal delay={200}>
-            <div className="clean-card p-8 md:p-10 bg-[#FFFCF7]">
+            <div className="clean-card p-8 md:p-10">
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-500 uppercase">Your Name</label>
+                    <label className="text-xs font-bold text-muted-foreground uppercase">Your Name</label>
                     <input
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       type="text"
                       placeholder="Enter name"
-                      className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400"
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-muted-foreground"
                       required
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-bold text-slate-500 uppercase">Phone Number</label>
+                    <label className="text-xs font-bold text-muted-foreground uppercase">Phone Number</label>
                     <input
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       type="tel"
                       placeholder="+91..."
-                      className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400"
+                      className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-muted-foreground"
                       required
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-slate-500 uppercase">Message</label>
+                  <label className="text-xs font-bold text-muted-foreground uppercase">Message</label>
                   <textarea
                     placeholder="Tell us about your trip..."
                     rows={4}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
-                    className="w-full px-4 py-3 rounded-lg border border-slate-200 bg-slate-50 text-slate-900 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none placeholder:text-slate-400"
+                    className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none placeholder:text-muted-foreground"
                   />
                 </div>
 

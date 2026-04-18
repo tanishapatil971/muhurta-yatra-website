@@ -41,6 +41,8 @@ const DUMMY_PACKAGES = [
   }
 ];
 
+const Place = require('../models/Place'); // Support fallback mapping
+
 // @desc Get all packages (with fallback support)
 // @route GET /api/packages
 exports.getPackages = async (req, res) => {
@@ -53,13 +55,27 @@ exports.getPackages = async (req, res) => {
       return res.status(200).json(DUMMY_PACKAGES);
     }
 
-    const packages = await Package.find().sort({ createdAt: -1 });
+    let packages = await Package.find().lean().sort({ createdAt: -1 });
     
     // If database is empty, return dummy data as fallback.
     if (packages.length === 0) {
       console.warn("⚠️  [DATABASE] Empty packages collection, returning dummy data as fallback.");
       return res.status(200).json(DUMMY_PACKAGES);
     }
+
+    // 🚀 DYNAMIC IMAGE FALLBACK LOGIC
+    // If a package does not have an image, borrow it from its matching Place
+    const places = await Place.find().lean();
+    packages = packages.map(pkg => {
+      if (!pkg.image || pkg.image === "") {
+        // Try to match place.name to package.destination
+        const matchingPlace = places.find(p => p.name.toLowerCase() === pkg.destination.toLowerCase());
+        if (matchingPlace && matchingPlace.img) {
+          pkg.image = matchingPlace.img;
+        }
+      }
+      return pkg;
+    });
 
     console.log(`✅ [DATABASE] Fetched ${packages.length} packages from MongoDB.`);
     res.status(200).json(packages);
@@ -85,11 +101,33 @@ exports.createPackage = async (req, res) => {
 // @desc Update a package
 exports.updatePackage = async (req, res) => {
   try {
-    const updatedPackage = await Package.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    const updateData = { ...req.body };
+    const { removeImage } = updateData;
+    delete updateData.removeImage; // Remove the custom flag from the pure data payload
+
+    // 1. Strictly ignore empty image fields to preserve existing image
+    if (!updateData.image || updateData.image === "") {
+      delete updateData.image;
+    }
+
+    // 2. Build the MongoDB update operation using $set
+    const dbUpdate = { $set: updateData };
+
+    // 3. Explicitly handle 'removeImage = true'
+    if (removeImage === true) {
+      dbUpdate.$set.image = ""; // Or $unset, but the model uses default: '' so we set to empty string
+    }
+
+    const updatedPackage = await Package.findByIdAndUpdate(
+      req.params.id, 
+      dbUpdate, 
+      { new: true, runValidators: true } // Ensures new partial document is returned safely
+    );
+    
     if (!updatedPackage) return res.status(404).json({ message: 'Package not found' });
     res.json(updatedPackage);
   } catch (error) {
-    res.status(500).json({ message: 'Server error' });
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 

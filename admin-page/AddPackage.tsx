@@ -26,6 +26,8 @@ export default function AddPackage({
 
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [removeImage, setRemoveImage] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   // Prefill form when editing
   useEffect(() => {
@@ -39,6 +41,7 @@ export default function AddPackage({
         description: editData.description || "",
         itinerary: Array.isArray(editData.itinerary) ? editData.itinerary.join("\n") : ""
       });
+      setRemoveImage(false);
     } else {
       // Reset form if not editing
       setFormData({
@@ -50,12 +53,52 @@ export default function AddPackage({
         description: "",
         itinerary: ""
       });
+      setRemoveImage(false);
     }
   }, [isEditing, editData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    setError("");
+
+    try {
+      const uploadForm = new FormData();
+      uploadForm.append("image", file);
+
+      // Determine upload endpoint
+      const uploadUrl = API_ENDPOINTS.packages.replace("/packages", "/upload"); 
+      
+      const res = await fetch(uploadUrl, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token") || ""}`
+        },
+        body: uploadForm
+      });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.message || "Upload failed. Please check Cloudinary configuration.");
+      }
+      
+      const data = await res.json();
+      setFormData(prev => ({ ...prev, image: data.imageUrl }));
+      setRemoveImage(false);
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || "Failed to upload image. Server may be unreachable.");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -85,7 +128,8 @@ export default function AddPackage({
           ...formData,
           price: Number(formData.price) || 0,
           maxPeople: Number(formData.maxPeople) || 1,
-          itinerary: (formData.itinerary || "").split("\n").filter(line => line.trim() !== "")
+          itinerary: (formData.itinerary || "").split("\n").filter(line => line.trim() !== ""),
+          removeImage: removeImage
         })
       });
 
@@ -226,18 +270,65 @@ export default function AddPackage({
             <span>✨</span> Extended Details
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
+            <div className="space-y-3">
               <label className="text-xs font-bold tracking-wider text-[#3D3630] uppercase">
                 Image URL
               </label>
-              <input
-                type="text"
-                name="image"
-                value={formData.image}
-                onChange={handleChange}
-                placeholder="e.g. https://example.com/image.jpg"
-                className="w-full px-4 py-3 bg-[#F5F0E8] border-[1.5px] border-[#EDE6D6] rounded-xl outline-none focus:border-[#C75B2A] focus:ring-4 focus:ring-[#C75B2A]/10 transition-all"
-              />
+              
+              {/* Image Preview & Remove Logic */}
+              {(formData.image || (isEditing && editData?.image && !removeImage)) && (
+                <div className="relative w-full h-32 rounded-xl overflow-hidden border border-[#EDE6D6] group">
+                  <img 
+                    src={formData.image || editData?.image} 
+                    alt="Package Preview" 
+                    className="w-full h-full object-cover"
+                    onError={(e) => (e.currentTarget.style.display = 'none')}
+                  />
+                  <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                    <button 
+                      type="button"
+                      onClick={() => {
+                        setRemoveImage(true);
+                        setFormData(prev => ({ ...prev, image: "" }));
+                      }}
+                      className="px-4 py-2 bg-rose-600 text-white text-xs font-bold uppercase tracking-wider rounded-lg shadow-lg hover:bg-rose-700 transition"
+                    >
+                      Remove Image
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              <div className="flex flex-col space-y-2">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  disabled={uploading}
+                  className="w-full px-4 py-3 bg-[#F5F0E8] border-[1.5px] border-[#EDE6D6] rounded-xl outline-none focus:border-[#C75B2A] transition-all file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-[#C75B2A] file:text-white hover:file:bg-[#B54E22] cursor-pointer"
+                />
+                
+                {uploading && (
+                  <p className="text-xs text-[#C75B2A] font-bold animate-pulse mt-1 tracking-wider">
+                    ☁️ Uploading securely to Cloudinary...
+                  </p>
+                )}
+
+                <div className="flex items-center gap-2 mt-2">
+                  <span className="text-xs text-gray-400 font-medium">Or</span>
+                  <input
+                    type="text"
+                    name="image"
+                    value={formData.image}
+                    onChange={(e) => {
+                      handleChange(e);
+                      if (e.target.value) setRemoveImage(false);
+                    }}
+                    placeholder="paste a URL directly as a fallback"
+                    className="flex-1 px-3 py-2 text-xs bg-white border border-[#EDE6D6] rounded-lg outline-none focus:border-gray-400 transition-all"
+                  />
+                </div>
+              </div>
             </div>
             <div className="space-y-2">
               <label className="text-xs font-bold tracking-wider text-[#3D3630] uppercase">

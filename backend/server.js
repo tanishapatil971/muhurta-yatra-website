@@ -54,12 +54,15 @@ const dbCheck = (req, res, next) => {
     next();
 };
 
+const uploadRoutes = require('./routes/uploadRoutes');
+
 // 🛣️ Routes
 app.use('/api/enquiries', enquiryRoutes);
 app.use('/api/auth', dbCheck, authRoutes);
 app.use('/api/packages', packageRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/places', placeRoutes);
+app.use('/api/upload', uploadRoutes);
 
 // 🔍 Health Check
 app.get('/api/health', (req, res) => {

@@ -64,7 +64,7 @@ export default function About() {
             <ScrollReveal>
               <div className="relative">
                 <span className="text-primary font-black text-xs tracking-[0.3em] uppercase block mb-3 opacity-80 luxury-text-shadow">The Vision</span>
-                <h2 className="font-heading text-4xl md:text-5xl font-black mt-2 text-slate-900 luxury-text-shadow leading-tight">
+                <h2 className="font-heading text-4xl md:text-5xl font-black mt-2 text-foreground luxury-text-shadow leading-tight">
                   Fresh Perspectives. <br />Deep Conviction.
                 </h2>
                 <div className="w-20 h-1.5 bg-primary mt-6 rounded-full opacity-20" />
@@ -84,12 +84,12 @@ export default function About() {
       </section>
 
       {/* Why Choose Us */}
-      <section className="section-padding bg-muted/30">
+      <section className="section-padding bg-muted">
         <div className="container-wide">
           <ScrollReveal>
             <div className="text-center mb-12 px-4">
               <span className="text-primary font-bold text-sm tracking-widest uppercase block mb-2">The Difference</span>
-              <h2 className="font-heading text-3xl md:text-4xl font-bold text-slate-900">Why Muhurta Yatra?</h2>
+              <h2 className="font-heading text-3xl md:text-4xl font-bold text-foreground">Why Muhurta Yatra?</h2>
             </div>
           </ScrollReveal>
 
@@ -100,8 +100,8 @@ export default function About() {
                   <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6 text-primary">
                     <item.icon className="w-6 h-6" strokeWidth={2.5} />
                   </div>
-                  <h3 className="font-heading text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
-                  <p className="text-slate-500 text-sm leading-relaxed">{item.desc}</p>
+                  <h3 className="font-heading text-xl font-bold text-foreground mb-3">{item.title}</h3>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
                 </div>
               </ScrollReveal>
             ))}

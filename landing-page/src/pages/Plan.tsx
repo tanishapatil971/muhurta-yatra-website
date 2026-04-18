@@ -47,17 +47,17 @@ export default function Plan() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 px-4">
-    <h1 className="text-3xl font-bold mb-2 text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background text-foreground px-4 py-20">
+    <h1 className="text-3xl font-bold mb-2 text-center text-foreground">
   Smart Yatra Planner
 </h1>
-<p className="text-gray-600 mb-6 text-center max-w-md">
+<p className="text-muted-foreground mb-6 text-center max-w-md">
   AI-powered itinerary generator for spiritual and travel planning
 </p>
       {/* FORM */}
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-xl shadow-md w-full max-w-md"
+        className="bg-card text-card-foreground border border-border p-8 rounded-xl shadow-sm w-full max-w-md"
       >
         <h1 className="text-2xl font-bold mb-6 text-center">
           Plan Your Yatra
@@ -68,7 +68,7 @@ export default function Plan() {
           placeholder="Enter Destination (Ujjain, Goa, Kedarnath...)"
           value={destination}
           onChange={(e) => setDestination(e.target.value)}
-          className="w-full mb-4 p-3 border rounded-lg"
+          className="w-full mb-4 p-3 border border-border bg-background text-foreground rounded-lg outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground"
         />
 
         <input
@@ -76,12 +76,12 @@ export default function Plan() {
           placeholder="Number of Days"
           value={days}
           onChange={(e) => setDays(e.target.value)}
-          className="w-full mb-4 p-3 border rounded-lg"
+          className="w-full mb-4 p-3 border border-border bg-background text-foreground rounded-lg outline-none focus:ring-2 focus:ring-primary/20 transition-all placeholder:text-muted-foreground"
         />
 
         <button
           type="submit"
-          className="w-full bg-black text-white py-3 rounded-lg"
+          className="w-full bg-primary text-primary-foreground font-bold py-3 rounded-lg hover:bg-primary/90 transition"
         >
           Generate Plan
         </button>
@@ -89,7 +89,7 @@ export default function Plan() {
 
       {/* OUTPUT */}
       {plan.length > 0 && (
-        <div className="mt-8 bg-white p-6 rounded-xl shadow-md w-full max-w-md">
+        <div className="mt-8 bg-card text-card-foreground border border-border p-6 rounded-xl shadow-sm w-full max-w-md">
           <h2 className="text-xl font-semibold mb-4 text-center">
             Your Itinerary
           </h2>
@@ -98,39 +98,39 @@ export default function Plan() {
           <div className="space-y-4">
             {plan.map((day, index) => {
               let icon = "🧭";
-              let color = "bg-gray-100";
+              let color = "bg-muted/50 text-foreground";
 
               if (
                 day.toLowerCase().includes("temple") ||
                 day.toLowerCase().includes("darshan")
               ) {
                 icon = "🛕";
-                color = "bg-yellow-100";
+                color = "bg-amber-900/10 text-amber-500 dark:bg-amber-500/10 dark:text-amber-400";
               } else if (
                 day.toLowerCase().includes("arrival") ||
                 day.toLowerCase().includes("travel")
               ) {
                 icon = "🚗";
-                color = "bg-blue-100";
+                color = "bg-blue-900/10 text-blue-500 dark:bg-blue-500/10 dark:text-blue-400";
               } else if (day.toLowerCase().includes("return")) {
                 icon = "🔄";
-                color = "bg-green-100";
+                color = "bg-emerald-900/10 text-emerald-500 dark:bg-emerald-500/10 dark:text-emerald-400";
               }
 
               return (
                 <div
                   key={index}
-                  className={`p-4 rounded-xl border shadow-sm flex items-start gap-4 ${color}`}
+                  className={`p-4 rounded-xl shadow-sm flex items-start gap-4 ${color}`}
                 >
-                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-black text-white font-bold">
+                  <div className="w-10 h-10 flex items-center justify-center rounded-full bg-primary text-primary-foreground font-bold shrink-0">
                     {index + 1}
                   </div>
 
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-lg flex items-center gap-2">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-bold text-lg flex items-center gap-2 text-foreground">
                       {icon} Day {index + 1}
                     </h3>
-                    <p className="text-gray-700">
+                    <p className="text-foreground/80 mt-1 leading-relaxed whitespace-pre-wrap">
                       {day.replace(`Day ${index + 1}: `, "")}
                     </p>
                   </div>
