@@ -1,21 +1,20 @@
-const app = require('./backend/server');
-const mongoose = require('mongoose');
+const connectDB = require('../backend/config/db');
+const app = require('../backend/server');
 
-// Vercel Serverless Function entry point
+/**
+ * Vercel Serverless Function entry point.
+ * Ensures DB is connected before handling each request through Express.
+ */
 module.exports = async (req, res) => {
-    // Ensure DB connection is established for every request (cached by Mongoose)
-    if (mongoose.connection.readyState !== 1) {
-        console.log('🕒 [VERCEL] Initializing MongoDB Connection...');
-        try {
-            await mongoose.connect(process.env.MONGO_URI, {
-                serverSelectionTimeoutMS: 5000
-            });
-            console.log('✅ [VERCEL] MongoDB Connection Success.');
-        } catch (err) {
-            console.error('❌ [VERCEL] MongoDB Connection Error:', err.message);
-        }
+    try {
+        await connectDB();
+        // Pass the request to Express
+        return app(req, res);
+    } catch (error) {
+        console.error('💥 [API BRIDGE] Handler Error:', error.message);
+        res.status(500).json({ 
+            message: 'Internal Server Error',
+            error: error.message 
+        });
     }
-
-    // Hand over to the Express app
-    return app(req, res);
 };

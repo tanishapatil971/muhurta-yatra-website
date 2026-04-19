@@ -1,6 +1,7 @@
 {
   "name": "muhurta-yatra-monorepo",
   "version": "1.0.0",
+  "workspaces": ["backend", "landing-page"],
   "description": "Premium Travel Platform - Handcrafted Journeys",
   "scripts": {
     "postinstall": "npm install --prefix backend && npm install --prefix landing-page",

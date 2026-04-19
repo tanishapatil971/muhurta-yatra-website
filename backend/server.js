@@ -11,9 +11,6 @@ const placeRoutes = require('./routes/placeRoutes');
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI;
-
 // Export app for serverless deployment
 module.exports = app;
 
@@ -75,50 +72,3 @@ app.get('/api/health', (req, res) => {
         timestamp: new Date().toISOString()
     });
 });
-
-// 🔄 MONGOOSE EVENT LISTENERS (For Auto-Recovery)
-mongoose.connection.on('connected', () => console.log('✅ [DATABASE] MongoDB Connection Success.'));
-mongoose.connection.on('error', (err) => console.error('❌ [DATABASE] MongoDB Error:', err.message));
-mongoose.connection.on('disconnected', () => {
-    console.warn('⚠️  [DATABASE] MongoDB Disconnected. Retrying in 5s...');
-    setTimeout(connectWithRetry, 5000);
-});
-
-async function connectWithRetry() {
-    if (mongoose.connection.readyState === 1) return;
-    console.log('🕒 [DATABASE] Attempting to reconnect...');
-    try {
-        await mongoose.connect(MONGO_URI);
-    } catch (err) {
-        console.error('❌ [DATABASE] Reconnection failed. Retrying soon.');
-    }
-}
-
-// 🌐 Start Server
-const startServer = async () => {
-    // 🛡️ Sanity Check
-    if (!MONGO_URI) {
-        console.error("\n❌ [CRITICAL ERROR] MONGO_URI is missing from .env!");
-        console.error("Please add your MongoDB connection string to backend/.env\n");
-        process.exit(1);
-    }
-
-    console.log("🕒 Initializing MongoDB Connection...");
-    try {
-        await mongoose.connect(MONGO_URI, { 
-            serverSelectionTimeoutMS: 5000 
-        });
-    } catch (err) {
-        console.error("❌ [DATABASE] Initial connection failed:", err.message);
-        console.warn("⚠️  Server is starting without DB. Auto-retry is active.");
-    }
-
-    app.listen(PORT, '0.0.0.0', () => {
-        console.log(`\n🚀 MUHURTA YATRA BACKEND: Running on http://localhost:${PORT}`);
-        console.log(`🌍 Health: http://localhost:${PORT}/api/health\n`);
-    });
-};
-
-if (require.main === module) {
-    startServer();
-}
