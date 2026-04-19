@@ -36,6 +36,9 @@ export default function PlaceCategory() {
   const [error, setError] = useState<string | null>(null);
   
   const contactHref = `tel:${CONTACT.phone.replace(/\s+/g, "")}`;
+  const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdQs-hd8H-DUNVtJM1MgNN8uOabqQWtcdb5_c6NcxLk7zqU0Q/viewform?usp=publish-editor"; // 👈 Replace with your actual Google Form URL
+
+  const [showBookingModal, setShowBookingModal] = useState(false);
 
   const fetchCategoryPlaces = async () => {
     setLoading(true);
@@ -424,10 +427,49 @@ export default function PlaceCategory() {
                 <div className="bg-primary/5 border border-primary/20 rounded-2xl p-6 text-center">
                   <h3 className="font-heading text-xl font-semibold text-foreground mb-2">Want to visit {place.name}?</h3>
                   <p className="text-muted-foreground text-sm mb-4">Let us plan the perfect trip for you.</p>
-                  <Button variant="hero" size="lg" asChild>
-                    <a href={contactHref}>Book This Trip</a>
+                  <Button variant="hero" size="lg" onClick={() => setShowBookingModal(true)}>
+                    Book This Trip
                   </Button>
                 </div>
+                
+                {/* Booking Confirmation Modal */}
+                {showBookingModal && (
+                  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+                    <div className="bg-background rounded-2xl shadow-xl max-w-md w-full p-8 text-center border border-border">
+                      <div className="text-4xl mb-3">🧳</div>
+                      <h2 className="font-heading text-2xl font-bold text-foreground mb-2">Ready for the Trip?</h2>
+                      <p className="text-muted-foreground text-sm mb-4">
+                        You're about to be redirected to our booking confirmation form for{" "}
+                        <span className="font-semibold text-foreground">{place.name}</span>.
+                      </p>
+                
+                      {/* Disclaimer */}
+                      <div className="bg-primary/5 border border-primary/20 rounded-xl p-3 mb-6 text-xs text-muted-foreground text-left">
+                        ⚠️ <strong>Disclaimer:</strong> Submitting the form is not a final booking.
+                        Our team will contact you within 24 hours to confirm availability, pricing,
+                        and trip details before any payment is collected.
+                      </div>
+                
+                      <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                        <Button
+                          variant="outline"
+                          onClick={() => setShowBookingModal(false)}
+                        >
+                          Cancel
+                        </Button>
+                        <Button
+                          variant="hero"
+                          onClick={() => {
+                            setShowBookingModal(false);
+                            window.open(GOOGLE_FORM_URL, "_blank");
+                          }}
+                        >
+                          Proceed to Form →
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </ScrollReveal>
             </div>
           )}
