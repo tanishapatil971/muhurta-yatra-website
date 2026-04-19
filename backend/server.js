@@ -14,6 +14,9 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 
+// Export app for serverless deployment
+module.exports = app;
+
 // 🛑 GLOBAL CRASH PROTECTION
 process.on('uncaughtException', (err) => {
     console.error('💥 UNCAUGHT EXCEPTION! Shutting down gracefully...');
@@ -116,4 +119,6 @@ const startServer = async () => {
     });
 };
 
-startServer();
+if (require.main === module) {
+    startServer();
+}
