@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import ScrollReveal from "@/components/ScrollReveal";
 
 import fortImg from "@/assets/sinhagad-real.jpg";
+import placesHero from "@/assets/places-hero.jpg";
 import beachImg from "@/assets/beach-harihareshwar.jpg";
 import pilgrimImg from "@/assets/pilgrim-temple.jpg";
 import heroHills from "@/assets/hero-pawna.jpg";
@@ -43,7 +44,7 @@ export default function Places() {
       {/* Hero */}
       <section className="relative h-[50vh] min-h-[350px] overflow-hidden">
         <img 
-          src={fortImg} 
+          src={placesHero} 
           alt="Explore Destinations" 
           className="w-full h-full object-cover" 
           onError={(e) => {
