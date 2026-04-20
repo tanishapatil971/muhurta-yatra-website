@@ -191,16 +191,6 @@ export default function About() {
                     </p>
                   </div>
                 </ScrollReveal>
-
-                <ScrollReveal delay={600}>
-                  <div className="pt-8 flex items-center gap-6">
-                    <div className="flex flex-col">
-                      <span className="font-serif text-3xl text-foreground/80 opacity-50 italic">Prajakta Patil</span>
-                      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1">Founder's Signature</span>
-                    </div>
-                    <div className="h-px flex-1 bg-[#EDE6D6]" />
-                  </div>
-                </ScrollReveal>
               </div>
             </div>
           </div>
