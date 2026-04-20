@@ -74,7 +74,7 @@ export default function AddPackage({
       uploadForm.append("image", file);
 
       // Determine upload endpoint
-      const uploadUrl = API_ENDPOINTS.packages.replace("/packages", "/upload"); 
+      const uploadUrl = API_ENDPOINTS.upload; 
       
       const res = await fetch(uploadUrl, {
         method: "POST",

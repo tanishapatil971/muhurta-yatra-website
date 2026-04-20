@@ -91,7 +91,7 @@ export default function AddPlace({
       const uploadForm = new FormData();
       uploadForm.append("image", file);
 
-      const uploadUrl = API_ENDPOINTS.places.replace("/places", "/upload"); 
+      const uploadUrl = API_ENDPOINTS.upload; 
       
       const res = await fetch(uploadUrl, {
         method: "POST",

@@ -66,7 +66,7 @@ export default function Dashboard() {
           <div className="lg:col-span-2 space-y-6">
             <h2 className="text-sm font-bold text-slate-400 uppercase tracking-widest px-1">Quick Actions</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Link to="/explore" className="bg-card text-card-foreground p-8 rounded-3xl border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group overflow-hidden relative">
+              <Link to="/places" className="bg-card text-card-foreground p-8 rounded-3xl border border-border shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all group overflow-hidden relative">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500" />
                 <Compass className="w-10 h-10 text-primary mb-6 group-hover:rotate-12 transition-transform" />
                 <h3 className="text-xl font-bold text-foreground mb-2">Explore New Places</h3>
@@ -113,7 +113,7 @@ export default function Dashboard() {
                     trending.map((pkg, i) => (
                       <Link 
                         key={pkg._id} 
-                        to="/explore"
+                        to="/places"
                         className="p-5 hover:bg-muted transition-all flex items-center gap-4 cursor-pointer group/item"
                       >
                          <div className="w-12 h-12 rounded-2xl bg-muted flex-shrink-0 flex items-center justify-center text-muted-foreground group-hover/item:bg-primary group-hover/item:text-primary-foreground transition-all transform group-hover/item:scale-110">
@@ -133,7 +133,7 @@ export default function Dashboard() {
                   )}
                 </div>
                 <div className="p-6 bg-muted/50 text-center border-t border-border">
-                   <Link to="/explore" className="text-[10px] font-black text-primary hover:text-primary/80 uppercase tracking-[0.2em] transition-all">Explore All Packages</Link>
+                   <Link to="/places" className="text-[10px] font-black text-primary hover:text-primary/80 uppercase tracking-[0.2em] transition-all">Explore All Packages</Link>
                 </div>
              </div>
           </div>

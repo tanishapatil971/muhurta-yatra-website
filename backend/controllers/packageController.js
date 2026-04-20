@@ -101,6 +101,13 @@ exports.createPackage = async (req, res) => {
 // @desc Update a package
 exports.updatePackage = async (req, res) => {
   try {
+    // 🧱 PREVENT UPDATING DUMMY DATA
+    if (req.params.id && String(req.params.id).startsWith('dummy_')) {
+      return res.status(403).json({ 
+        message: 'Forbidden: Cannot update demo data. Please connect to MongoDB to manage real packages.' 
+      });
+    }
+
     const updateData = { ...req.body };
     const { removeImage } = updateData;
     delete updateData.removeImage; // Remove the custom flag from the pure data payload
@@ -134,6 +141,13 @@ exports.updatePackage = async (req, res) => {
 // @desc Delete a package
 exports.deletePackage = async (req, res) => {
   try {
+    // 🧱 PREVENT DELETING DUMMY DATA
+    if (req.params.id && String(req.params.id).startsWith('dummy_')) {
+      return res.status(403).json({ 
+        message: 'Forbidden: Cannot delete demo data.' 
+      });
+    }
+
     const deletedPackage = await Package.findByIdAndDelete(req.params.id);
     if (!deletedPackage) return res.status(404).json({ message: 'Package not found' });
     res.json({ message: 'Package deleted successfully' });

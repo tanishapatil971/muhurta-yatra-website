@@ -7,6 +7,7 @@ const authRoutes = require('./routes/authRoutes');
 const packageRoutes = require('./routes/packageRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const placeRoutes = require('./routes/placeRoutes');
+const connectDB = require('./config/db');
 
 dotenv.config();
 
@@ -59,10 +60,10 @@ const uploadRoutes = require('./routes/uploadRoutes');
 // 🛣️ Routes
 app.use('/api/enquiries', enquiryRoutes);
 app.use('/api/auth', dbCheck, authRoutes);
-app.use('/api/packages', packageRoutes);
-app.use('/api/bookings', bookingRoutes);
-app.use('/api/places', placeRoutes);
-app.use('/api/upload', uploadRoutes);
+app.use('/api/packages', dbCheck, packageRoutes);
+app.use('/api/bookings', dbCheck, bookingRoutes);
+app.use('/api/places', dbCheck, placeRoutes);
+app.use('/api/upload', dbCheck, uploadRoutes);
 
 // 🔍 Health Check
 app.get('/api/health', (req, res) => {
@@ -72,3 +73,22 @@ app.get('/api/health', (req, res) => {
         timestamp: new Date().toISOString()
     });
 });
+
+// 🚀 LOCAL STARTUP LOGIC
+if (require.main === module) {
+    const PORT = process.env.PORT || 5000;
+    connectDB().then(() => {
+        app.listen(PORT, () => {
+            console.log(`
+            =================================================
+            🌐 Muhurta Yatra Backend: ACTIVE
+            📍 URL: http://localhost:${PORT}
+            📂 ENVIRONMENT: ${process.env.NODE_ENV || 'development'}
+            =================================================
+            `);
+        });
+    }).catch(err => {
+        console.error('❌ Failed to start server:', err.message);
+        process.exit(1);
+    });
+}

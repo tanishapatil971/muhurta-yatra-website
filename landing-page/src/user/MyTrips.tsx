@@ -1,4 +1,4 @@
-import React from "react";
+import { Link } from "react-router-dom";
 import { Search, Map as MapIcon, Calendar, ArrowRight } from "lucide-react";
 import UserLayout from "./UserLayout";
 
@@ -34,12 +34,12 @@ export default function MyTrips() {
           <p className="text-muted-foreground mb-8 leading-relaxed">It looks like you haven't booked any yatras yet. Start exploring our handcrafted packages to begin your journey.</p>
           
           <div className="flex flex-col sm:flex-row gap-4">
-            <button 
-              onClick={() => window.location.href = "/explore"}
+            <Link 
+              to="/places"
               className="bg-primary text-white px-8 py-3 rounded-xl font-bold hover:bg-primary/90 transition-all flex items-center gap-2"
             >
               Explore Packages <ArrowRight className="w-4 h-4" />
-            </button>
+            </Link>
             <button className="bg-card border border-border text-foreground px-8 py-3 rounded-xl font-bold hover:bg-muted transition-all">
               Track Offline Booking
             </button>

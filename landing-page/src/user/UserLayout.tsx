@@ -24,7 +24,7 @@ export default function UserLayout({ children }: UserLayoutProps) {
   const navItems = [
     { name: "Overview", path: "/dashboard", icon: LayoutDashboard },
     { name: "My Bookings", path: "/my-trips", icon: Map },
-    { name: "Explore New", path: "/explore", icon: Compass },
+    { name: "Explore New", path: "/places", icon: Compass },
     { name: "Wishlist", path: "/personalized", icon: Star },
   ];
 
