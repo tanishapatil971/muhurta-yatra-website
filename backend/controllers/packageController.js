@@ -51,20 +51,13 @@ exports.getPackages = async (req, res) => {
     const isDbConnected = mongoose.connection.readyState === 1;
 
     if (!isDbConnected) {
-      console.warn("⚠️  [FALLBACK] MongoDB is not connected. Returning dummy package data.");
-      return res.status(200).json(DUMMY_PACKAGES);
+      console.warn("⚠️  [DATABASE] MongoDB is not connected. API will return 503.");
+      return res.status(503).json({ message: "Database not connected" });
     }
 
     let packages = await Package.find().lean().sort({ createdAt: -1 });
     
-    // If database is empty, return dummy data as fallback.
-    if (packages.length === 0) {
-      console.warn("⚠️  [DATABASE] Empty packages collection, returning dummy data as fallback.");
-      return res.status(200).json(DUMMY_PACKAGES);
-    }
-
-    // 🚀 DYNAMIC IMAGE FALLBACK LOGIC
-    // If a package does not have an image, borrow it from its matching Place
+    // Fallback logic for images only, not the data itself.
     const places = await Place.find().lean();
     packages = packages.map(pkg => {
       if (!pkg.image || pkg.image === "") {

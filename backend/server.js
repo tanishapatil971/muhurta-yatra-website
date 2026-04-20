@@ -7,6 +7,7 @@ const authRoutes = require('./routes/authRoutes');
 const packageRoutes = require('./routes/packageRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const placeRoutes = require('./routes/placeRoutes');
+const seedRoutes = require('./routes/seedRoutes');
 const connectDB = require('./config/db');
 
 dotenv.config();
@@ -64,6 +65,7 @@ app.use('/api/packages', dbCheck, packageRoutes);
 app.use('/api/bookings', dbCheck, bookingRoutes);
 app.use('/api/places', dbCheck, placeRoutes);
 app.use('/api/upload', dbCheck, uploadRoutes);
+app.use('/api/seed', dbCheck, seedRoutes);
 
 // 🔍 Health Check
 app.get('/api/health', (req, res) => {

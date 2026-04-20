@@ -9,9 +9,18 @@ import { useAuth } from "@/context/AuthContext";
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useAuth();
+  const { login, user, isAuthenticated } = useAuth();
   
-  
+  // Auto-redirect if already logged in
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      if (user.role === "admin") {
+        navigate("/admin", { replace: true });
+      } else {
+        navigate("/dashboard", { replace: true });
+      }
+    }
+  }, [isAuthenticated, user, navigate]);
   // Also check URL parameters for role-based explicit login requests
   const searchParams = new URLSearchParams(location.search);
   const requestedRole = searchParams.get("role"); // 'admin' or null

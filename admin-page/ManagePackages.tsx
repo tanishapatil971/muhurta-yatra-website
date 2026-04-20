@@ -22,6 +22,34 @@ export default function ManagePackages({
 }: ManagePackagesProps) {
   console.log("TRACING: Rendering ManagePackages");
   const [searchTerm, setSearchTerm] = useState("");
+  const [seeding, setSeeding] = useState(false);
+
+  const handleSeed = async () => {
+    if (!window.confirm("This will populate your database with professional travel data. Proceed?")) return;
+    
+    setSeeding(true);
+    try {
+      const res = await fetch(`${API_ENDPOINTS.places.replace("/places", "/seed")}`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("auth_token") || ""}`
+        }
+      });
+      
+      if (res.ok) {
+        alert("✅ Database seeded successfully!");
+        fetchPackages();
+      } else {
+        const data = await res.json();
+        alert(`❌ Seed failed: ${data.message || "Unknown error"}`);
+      }
+    } catch (err) {
+      console.error("Seed error:", err);
+      alert("❌ Server unreachable. Please check your connection.");
+    } finally {
+      setSeeding(false);
+    }
+  };
 
   const filteredPackages = (packages || []).filter(pkg => 
     (pkg.destination || "").toLowerCase().includes(searchTerm.toLowerCase())
@@ -126,12 +154,21 @@ export default function ManagePackages({
                       </p>
                     </div>
                     {!searchTerm && (
-                      <button 
-                        onClick={() => setActiveTab("add-package")}
-                        className="mt-2 px-4 py-2 text-xs font-bold text-[#C75B2A] border border-[#C75B2A] rounded-lg hover:bg-[#C75B2A] hover:text-white transition-all"
-                      >
-                        + Add Your First Package
-                      </button>
+                      <div className="flex flex-col gap-2 mt-4">
+                        <button 
+                          onClick={() => setActiveTab("add-package")}
+                          className="px-4 py-2 text-xs font-bold text-[#C75B2A] border border-[#C75B2A] rounded-lg hover:bg-[#C75B2A] hover:text-white transition-all shadow-sm"
+                        >
+                          + Add Your First Package
+                        </button>
+                        <button 
+                          onClick={handleSeed}
+                          disabled={seeding}
+                          className="px-4 py-2 text-xs font-bold text-emerald-600 border border-emerald-600 rounded-lg hover:bg-emerald-600 hover:text-white transition-all shadow-sm disabled:opacity-50"
+                        >
+                          {seeding ? "🌱 Seeding..." : "✨ Seed Professional Data"}
+                        </button>
+                      </div>
                     )}
                   </div>
                 </td>
