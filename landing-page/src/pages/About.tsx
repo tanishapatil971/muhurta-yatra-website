@@ -1,6 +1,7 @@
 import { Award, Users, MapPin, TrendingUp, Heart, Globe, ShieldCheck, Zap, Sparkles, Eye } from "lucide-react";
 import ScrollReveal from "@/components/ScrollReveal";
 import heroRaigad from "@/assets/hero-raigad.jpg";
+import prajakta from "@/assets/prajakta.jpg";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
@@ -129,41 +130,79 @@ export default function About() {
         </div>
       </section>
 
-      {/* Team */}
-      <section className="section-padding bg-background">
+      {/* Founder Spotlight */}
+      <section className="section-padding bg-background relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-64 h-64 bg-primary/5 rounded-full blur-3xl" />
+        
         <div className="container-wide">
-          <ScrollReveal>
-            <div className="text-center mb-16">
-              <span className="text-primary font-semibold text-sm tracking-widest uppercase">The Team</span>
-              <h2 className="font-heading text-3xl md:text-4xl font-bold mt-2 text-foreground">Guided by Passion</h2>
-              <p className="text-muted-foreground mt-4 max-w-2xl mx-auto">
-                We are a small, dedicated group of explorers who believe in the power of meaningful travel.
-              </p>
-            </div>
-          </ScrollReveal>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {[
-              { name: "Rohit Sharma", role: "Co-Founder", desc: "Digital nomad and history buff who envisioned a more personal way to see India." },
-              { name: "Anjali Deshmukh", role: "Head of Curation", desc: "Expert on regional cuisines and spiritual history of the Sahyadri range." },
-              { name: "Vikram Patil Pat", role: "Logistics Lead", desc: "Ensures safety and comfort are never compromised, no matter how remote the trail." },
-            ].map((member, i) => (
-              <ScrollReveal key={i} delay={i * 100}>
-                <div className="group glass-card p-8 text-center hover-lift relative overflow-hidden">
-                  <div className="absolute top-0 left-0 w-full h-1 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
-                  
-                  <div className="w-24 h-24 rounded-full bg-primary/5 mx-auto mb-6 flex items-center justify-center ring-1 ring-primary/10 group-hover:bg-primary group-hover:ring-primary transition-all duration-300">
-                    <span className="font-heading text-3xl font-bold text-primary group-hover:text-white transition-colors">
-                      {member.name.split(" ").map((n) => n[0]).join("")}
-                    </span>
+          <div className="max-w-6xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+              {/* Photo Column */}
+              <ScrollReveal>
+                <div className="relative group">
+                  <div className="absolute -inset-4 bg-primary/10 rounded-[3rem] rotate-3 transition-transform group-hover:rotate-6 duration-700" />
+                  <div className="relative aspect-[4/5] rounded-[2.5rem] overflow-hidden border-8 border-white shadow-2xl shadow-primary/10">
+                    <img 
+                      src={prajakta} 
+                      alt="Prajakta Patil - Founder of Muhurta Yatra" 
+                      className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                   </div>
                   
-                  <h3 className="font-heading text-xl font-bold text-foreground mb-1">{member.name}</h3>
-                  <p className="text-primary text-sm font-bold tracking-widest uppercase mb-4">{member.role}</p>
-                  <p className="text-muted-foreground text-sm leading-relaxed">{member.desc}</p>
+                  {/* Floating Badge */}
+                  <div className="absolute -bottom-6 -right-6 bg-white p-6 rounded-2xl shadow-xl animate-bounce-slow">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+                        <Heart className="w-5 h-5 fill-current" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Visionary</p>
+                        <p className="font-heading font-bold text-foreground">Prajakta Patil</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </ScrollReveal>
-            ))}
+
+              {/* Story Column */}
+              <div className="space-y-8">
+                <ScrollReveal delay={200}>
+                  <div>
+                    <span className="text-primary font-black text-xs tracking-[0.3em] uppercase block mb-3 opacity-80 luxury-text-shadow">The Founder</span>
+                    <h2 className="font-heading text-4xl md:text-5xl font-black text-foreground luxury-text-shadow leading-tight mb-2">
+                      Prajakta Patil
+                    </h2>
+                    <p className="text-primary text-sm font-bold tracking-widest uppercase mb-8">Founder & Managing Director</p>
+                  </div>
+                </ScrollReveal>
+
+                <ScrollReveal delay={400}>
+                  <div className="space-y-6">
+                    <p className="text-xl text-foreground font-medium leading-relaxed italic border-l-4 border-primary pl-6">
+                      "I didn't just build a website; I built a home for the stories that every destination is waiting to tell."
+                    </p>
+                    <p className="text-muted-foreground text-lg leading-relaxed">
+                      As the Founder of Muhurta Yatra, Prajakta Patil leads with a vision to redefine how India travels. An accomplished trekker and influential blogger, she built this platform to bring handcrafted, soul-stirring journeys to fellow explorers.
+                    </p>
+                    <p className="text-muted-foreground text-lg leading-relaxed">
+                      Under her leadership, every Muhurta Yatra experience is personally curated to ensure it reflects the passion and depth of a true traveler’s heart. When she isn't scale Sahyadri forts or documenting her journeys, Prajakta is hands-on in crafting personalized 'Muhurta' windows for every traveler, ensuring every trip is as unique as the person taking it.
+                    </p>
+                  </div>
+                </ScrollReveal>
+
+                <ScrollReveal delay={600}>
+                  <div className="pt-8 flex items-center gap-6">
+                    <div className="flex flex-col">
+                      <span className="font-serif text-3xl text-foreground/80 opacity-50 italic">Prajakta Patil</span>
+                      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-[0.2em] mt-1">Founder's Signature</span>
+                    </div>
+                    <div className="h-px flex-1 bg-[#EDE6D6]" />
+                  </div>
+                </ScrollReveal>
+              </div>
+            </div>
           </div>
         </div>
       </section>
