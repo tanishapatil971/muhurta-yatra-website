@@ -554,9 +554,23 @@ export default function Index() {
                     placeholder="Tell us about your trip..."
                     rows={4}
                     value={message}
+                    maxLength={500}
                     onChange={(e) => setMessage(e.target.value)}
                     className="w-full px-4 py-3 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none placeholder:text-muted-foreground"
                   />
+                  <div className="flex justify-end">
+                    <span
+                      className={`text-xs font-medium transition-colors ${
+                        message.length >= 500
+                          ? "text-red-500 font-bold"
+                          : message.length >= 400
+                          ? "text-amber-500"
+                          : "text-muted-foreground"
+                      }`}
+                    >
+                      {message.length} / 500
+                    </span>
+                  </div>
                 </div>
 
                 <Button
