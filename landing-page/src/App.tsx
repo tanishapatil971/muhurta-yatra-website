@@ -9,7 +9,6 @@ import { ThemeProvider } from "./context/ThemeContext";
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import ChatWidget from "@/components/ChatWidget";
 
 import Index from "./pages/Index";
 import About from "./pages/About";
@@ -129,7 +128,6 @@ function AppContent() {
       </Routes>
 
       {!hideLayout && <Footer />}
-      <ChatWidget />
     </>
   );
 }
