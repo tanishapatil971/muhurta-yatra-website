@@ -437,9 +437,9 @@ export default function Index() {
       <section className="py-16 bg-secondary">
         <div className="container-wide grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {[
-            { num: "250+", label: "Happy Travelers" },
+            { num: "500+", label: "Happy Travelers" },
             { num: "20+", label: "Destinations" },
-            { num: "Est. 2024", label: "Young & Energetic" },
+            { num: "Est. 2025", label: "Young & Energetic" },
             { num: "100%", label: "Satisfaction" },
           ].map((s, i) => (
             <ScrollReveal key={i} delay={i * 100}>
