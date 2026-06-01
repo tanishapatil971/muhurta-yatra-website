@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const stats = [
-  { value: "250+", label: "Happy Travelers", icon: Users },
+  { value: "500+", label: "Happy Travelers", icon: Users },
   { value: "20+", label: "Destinations", icon: MapPin },
   { value: "1st Year", label: "of Excellence", icon: Award },
   { value: "100%", label: "Handcrafted", icon: Heart },
