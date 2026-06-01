@@ -44,7 +44,7 @@ export default function About() {
         <div className="hero-overlay absolute inset-0" />
         <div className="absolute inset-0 flex items-center justify-center text-center px-4">
           <div className="animate-fade-up">
-            <span className="text-white/80 font-bold text-xs tracking-widest uppercase mb-3 block">Est. 2024</span>
+            <span className="text-white/80 font-bold text-xs tracking-widest uppercase mb-3 block">Est. 2025</span>
             <h1 className="font-heading text-4xl md:text-6xl font-bold text-white mb-4">
               Our Journey
             </h1>
